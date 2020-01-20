@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
@@ -23,10 +24,10 @@ public class StreamingService implements WebMvcConfigurer {
 
   private static final NumberFormat decimalFormat = new DecimalFormat("#0.00");
 
-  // @Override
-  // public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
-  // configurer.setDefaultTimeout(100000000); // in milliseconds (20 hours)
-  // }
+  @Override
+  public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
+    configurer.setDefaultTimeout(100000000); // in milliseconds (20 hours)
+  }
 
   @ExceptionHandler(ClientAbortException.class)
   @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)

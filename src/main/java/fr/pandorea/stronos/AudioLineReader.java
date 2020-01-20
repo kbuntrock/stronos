@@ -40,10 +40,10 @@ public enum AudioLineReader {
 
   private final List<Mp3Stream> streams = new ArrayList<>();
 
-  private boolean playSoundLocally = false;
+  private final boolean playSoundLocally = false;
   private SourceDataLine outputLine = null;
 
-  private long totalBytes = 0;
+  private final long totalBytes = 0;
 
   private AudioLineReader() {
     // Nothing to do
@@ -86,6 +86,7 @@ public enum AudioLineReader {
               var mp3 = mp3Encoder.encodePcmToMp3(abData);
               writeToStream(mp3);
               // outputLine.write(abData, 0, nBytesRead);
+              // logger.info("output " + nBytesRead);
             }
           }
 
