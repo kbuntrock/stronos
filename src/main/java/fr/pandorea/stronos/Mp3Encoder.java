@@ -2,22 +2,23 @@ package fr.pandorea.stronos;
 
 import java.io.ByteArrayOutputStream;
 import javax.sound.sampled.AudioFormat;
-import net.sourceforge.lame.lowlevel.LameEncoder;
-import net.sourceforge.lame.mp3.Lame;
-import net.sourceforge.lame.mp3.MPEGMode;
+import de.sciss.jump3r.lowlevel.LameEncoder;
 
 public class Mp3Encoder {
 
-  private final AudioFormat audioFormat;
+  // private final AudioFormat audioFormat;
+
+  private final LameEncoder encoder;
 
   public Mp3Encoder(AudioFormat audioFormat) {
-    this.audioFormat = audioFormat;
+    // this.audioFormat = audioFormat;
+    encoder = new LameEncoder(audioFormat);
   }
 
   public byte[] encodePcmToMp3(byte[] pcm) {
 
-    LameEncoder encoder =
-        new LameEncoder(audioFormat, 256, MPEGMode.STEREO, Lame.QUALITY_HIGHEST, false);
+    // LameEncoder encoder = new LameEncoder(audioFormat, 256, LameEncoder.CHANNEL_MODE_STEREO,
+    // LameEncoder.QUALITY_HIGHEST, false);
 
     ByteArrayOutputStream mp3 = new ByteArrayOutputStream();
     byte[] buffer = new byte[encoder.getPCMBufferSize()];
@@ -33,8 +34,12 @@ public class Mp3Encoder {
       mp3.write(buffer, 0, bytesWritten);
     }
 
-    encoder.close();
+    // encoder.close();
     return mp3.toByteArray();
+  }
+
+  public void close() {
+    encoder.close();
   }
 
 }

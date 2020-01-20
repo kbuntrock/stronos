@@ -15,25 +15,18 @@
 	<name>stronos</name>
 	<description>Stream your audio line to sonos</description>
 
-	<repositories>
-		<repository>
-			<id>my-local-repo</id>
-			<url>file://${basedir}/repo</url>
-		</repository>
-	</repositories>
-
 	<properties>
 		<java.version>11</java.version>
 	</properties>
 
 	<dependencies>
-		
+
 		<dependency>
-			<groupId>net.sourceforge</groupId>
-			<artifactId>lame</artifactId>
-			<version>3.98</version>
+			<groupId>de.sciss</groupId>
+			<artifactId>jump3r</artifactId>
+			<version>1.0.5</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>

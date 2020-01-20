@@ -16,7 +16,7 @@ public class StreamingService {
   public ResponseEntity<StreamingResponseBody> stream() {
 
     final HttpHeaders headers = new HttpHeaders();
-    headers.setContentDispositionFormData("filename", "audio.mp3");
+    headers.setContentDispositionFormData("filename", "stream.mp3");
 
     return ResponseEntity.ok().headers(headers).contentType(MediaType.valueOf("audio/mp3"))
         .body(new Mp3Stream());
@@ -28,6 +28,12 @@ public class StreamingService {
 
     return "test";
 
+  }
+
+  @GetMapping(value = "stop")
+  public String stop() {
+    AudioLineReader.get().stop();
+    return "OK";
   }
 
 }
