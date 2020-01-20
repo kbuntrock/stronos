@@ -1,0 +1,1 @@
+This project use as a dependency java-lame : https://github.com/nwaldispuehl/java-lame
