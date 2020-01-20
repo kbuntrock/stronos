@@ -173,6 +173,8 @@ public enum AudioLineReader {
         if (targetMixer.isLineSupported(info)) {
           logger.info("{} supports recording @ {}", mi.getName(), compressionFormat);
           return info;
+        } else {
+          targetMixer.close();
         }
       } catch (LineUnavailableException e) {
         logger.error("Error while finding a supported format.", e);
