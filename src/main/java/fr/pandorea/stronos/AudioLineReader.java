@@ -22,10 +22,12 @@ public enum AudioLineReader {
     return INSTANCE;
   }
 
-  private static final float SAMPLE_RATE = 44100;
-  private static final int SAMPLE_SIZE_IN_BITS = 16;
+  public static final int BUFFER_SIZE = 2048;
+
+  public static final float SAMPLE_RATE = 44100;
+  public static final int SAMPLE_SIZE_IN_BITS = 16;
   // 1 = mono, 2 = stéréo
-  private static final int NB_CHANNELS = 2;
+  public static final int NB_CHANNELS = 2;
 
   private static AudioFormat compressionFormat =
       new AudioFormat(SAMPLE_RATE, SAMPLE_SIZE_IN_BITS, NB_CHANNELS, true, false);
@@ -38,14 +40,16 @@ public enum AudioLineReader {
 
   private final List<Mp3Stream> streams = new ArrayList<>();
 
-  private boolean playSoundLocally = true;
+  private boolean playSoundLocally = false;
   private SourceDataLine outputLine = null;
+
+  private long totalBytes = 0;
 
   private AudioLineReader() {
     // Nothing to do
   }
 
-  public synchronized void read() {
+  public synchronized boolean read() {
 
     if (!reading.get()) {
       try {
@@ -74,12 +78,14 @@ public enum AudioLineReader {
           logger.info("Audio line read started");
 
           int nBytesRead = 0;
-          byte[] abData = new byte[2048];
+          byte[] abData = new byte[BUFFER_SIZE];
 
           while (nBytesRead != -1 && reading.get()) {
             nBytesRead = inputStream.read(abData, 0, abData.length);
             if (nBytesRead >= 0) {
-              outputLine.write(abData, 0, nBytesRead);
+              var mp3 = mp3Encoder.encodePcmToMp3(abData);
+              writeToStream(mp3);
+              // outputLine.write(abData, 0, nBytesRead);
             }
           }
 
@@ -100,14 +106,15 @@ public enum AudioLineReader {
           //
         }
 
-
+        return true;
       } catch (LineUnavailableException | IOException e) {
         logger.error("Cannot read data", e);
+        return false;
       }
 
-    } else {
-      logger.error("Already reading audio line");
     }
+    logger.error("Already reading audio line");
+    return false;
   }
 
   private void writeToStream(byte[] mp3) {
@@ -120,7 +127,15 @@ public enum AudioLineReader {
     streams.add(stream);
   }
 
-  public synchronized void stop() {
+  public void closeStreams() {
+    streams.forEach(s -> s.close());
+  }
+
+  public void removeStream(Object stream) {
+    streams.remove(stream);
+  }
+
+  public void stop() {
 
     if (reading.get()) {
 
@@ -130,9 +145,13 @@ public enum AudioLineReader {
       inputLine.close();
       inputLine = null;
 
-      outputLine.stop();
-      outputLine.close();
-      outputLine = null;
+      if (playSoundLocally) {
+        outputLine.stop();
+        outputLine.close();
+        outputLine = null;
+      }
+
+      streams.clear();
 
       reading.set(false);
 
@@ -165,6 +184,10 @@ public enum AudioLineReader {
 
   public boolean isReading() {
     return reading.get();
+  }
+
+  public List<Mp3Stream> getStreams() {
+    return streams;
   }
 
 }
