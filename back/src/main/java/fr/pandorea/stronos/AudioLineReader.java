@@ -43,8 +43,6 @@ public enum AudioLineReader {
   private final boolean playSoundLocally = false;
   private SourceDataLine outputLine = null;
 
-  private final long totalBytes = 0;
-
   private AudioLineReader() {
     // Nothing to do
   }
@@ -89,22 +87,6 @@ public enum AudioLineReader {
               // logger.info("output " + nBytesRead);
             }
           }
-
-          // var tab = new byte[2048];
-          // while (reading.get()) {
-          // int read = 0;
-          // while (read != 2048) {
-          // read += inputLine.read(tab, read, 2048);
-          // }
-          // // var mp3 = mp3Encoder.encodePcmToMp3(tab);
-          //
-          // if (outputLine != null && outputLine.isOpen()) {
-          // outputLine.write(tab, 0, tab.length);
-          // }
-          //
-          // // writeToStream(mp3);
-          // }
-          //
         }
 
         return true;
