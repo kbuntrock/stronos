@@ -3,7 +3,7 @@ package fr.kbu.stronos;
 /**
  * Based on
  * https://stackoverflow.com/questions/14485873/audio-change-volume-of-samples-in-byte-array
- * 
+ *
  * @author kbuntrock
  *
  */
@@ -17,12 +17,21 @@ public class VolumeControler {
     precomputeVolumeNormLUT();
   }
 
+  private static boolean withNormalization = false;
+
+  public static boolean toogleNormalization() {
+    withNormalization = !withNormalization;
+    return withNormalization;
+  }
+
   public static byte[] adjustVolume(byte[] audioSamples, float volume) {
     if (volume == 1.0f) {
       return audioSamples;
     }
     var array = adjustVolumeInternal(audioSamples, volume);
-    normalizeVolume(audioSamples, 0, audioSamples.length);
+    if (withNormalization) {
+      normalizeVolume(audioSamples, 0, audioSamples.length);
+    }
     return array;
   }
 

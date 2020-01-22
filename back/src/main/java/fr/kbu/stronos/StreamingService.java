@@ -79,7 +79,12 @@ public class StreamingService implements WebMvcConfigurer {
   }
 
   @GetMapping(value = "volume")
-  public void volume(@RequestParam float volume) {
-    AudioLineReader.get().adjusVolume(volume);
+  public String volume(@RequestParam float volume) {
+    return String.valueOf(AudioLineReader.get().adjusVolume(volume));
+  }
+
+  @GetMapping("normalize")
+  public String normalize() {
+    return String.valueOf(VolumeControler.toogleNormalization());
   }
 }
