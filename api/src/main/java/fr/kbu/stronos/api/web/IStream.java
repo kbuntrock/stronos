@@ -8,13 +8,10 @@ import fr.kbu.stronos.api.dto.StreamDto;
  *
  * @author : Kevin Buntrock
  */
-@RequestMapping(value = "/game")
+@RequestMapping(value = "/stream")
 public interface IStream {
 
-  @GetMapping("/steam")
-  String stream();
-
-  @GetMapping("/info")
+  @GetMapping("/info2")
   StreamDto info();
 
 }

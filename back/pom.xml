@@ -14,7 +14,14 @@
 	<description>Stream your audio line to sonos</description>
 
 	<dependencies>
+	
+		<dependency>
+            <groupId>fr.kbu.stronos</groupId>
+            <artifactId>stronos-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
+		<!-- MP3 encoder (pure java LAME port) -->
 		<dependency>
 			<groupId>de.sciss</groupId>
 			<artifactId>jump3r</artifactId>
