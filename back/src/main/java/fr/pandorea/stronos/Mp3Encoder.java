@@ -13,6 +13,7 @@ public class Mp3Encoder {
   public Mp3Encoder(AudioFormat audioFormat) {
     // this.audioFormat = audioFormat;
     encoder = new LameEncoder(audioFormat);
+
   }
 
   public byte[] encodePcmToMp3(byte[] pcm) {

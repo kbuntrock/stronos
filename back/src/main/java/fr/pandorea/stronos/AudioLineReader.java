@@ -43,6 +43,8 @@ public enum AudioLineReader {
   private final boolean playSoundLocally = false;
   private SourceDataLine outputLine = null;
 
+  private float volume = 1.0f;
+
   private AudioLineReader() {
     // Nothing to do
   }
@@ -81,6 +83,7 @@ public enum AudioLineReader {
           while (nBytesRead != -1 && reading.get()) {
             nBytesRead = inputStream.read(abData, 0, abData.length);
             if (nBytesRead >= 0) {
+              abData = VolumeControler.adjustVolume(abData, volume);
               var mp3 = mp3Encoder.encodePcmToMp3(abData);
               writeToStream(mp3);
               // outputLine.write(abData, 0, nBytesRead);
@@ -173,6 +176,11 @@ public enum AudioLineReader {
 
   public List<Mp3Stream> getStreams() {
     return streams;
+  }
+
+  public float adjusVolume(float v) {
+    volume = v;
+    return volume;
   }
 
 }
