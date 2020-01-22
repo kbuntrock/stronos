@@ -1,4 +1,4 @@
-package fr.pandorea.stronos;
+package fr.kbu.stronos;
 
 /**
  * Based on

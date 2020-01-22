@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.2.3.RELEASE</version>
+	</parent>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>fr.kbu.stronos</groupId>
+    <artifactId>stronos-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>parent</name>
+    <description>Projet parent</description>
+
+    <modules>
+        <module>utils/codegen</module>
+		<module>back</module>
+    </modules>
+
+    <properties>
+        <java.version>11</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <starter.codegen.version>1.0.0-SNAPSHOT</starter.codegen.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Enhanced Reflection library -->
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>0.9.11</version>
+            </dependency>
+            <!-- Spring MVC annotations to swagger documentation -->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>2.9.2</version>
+            </dependency>
+            <!-- Bean Mapper -->
+            <dependency>
+                <groupId>com.github.jmnarloch</groupId>
+                <artifactId>modelmapper-spring-boot-starter</artifactId>
+                <version>1.1.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>io.swagger</groupId>
+                    <artifactId>swagger-codegen-maven-plugin</artifactId>
+                    <version>2.4.8</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.eirslett</groupId>
+                    <artifactId>frontend-maven-plugin</artifactId>
+                    <version>1.8.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+		<plugins>
+		  <plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-toolchains-plugin</artifactId>
+			<version>1.1</version>
+			<executions>
+			  <execution>
+				<goals>
+				  <goal>toolchain</goal>
+				</goals>
+			  </execution>
+			</executions>
+			<configuration>
+			  <toolchains>
+				<jdk>
+				  <version>11</version>
+				</jdk>
+			  </toolchains>
+			</configuration>
+		  </plugin>
+	  </plugins>
+    </build>
+	
+
+</project>

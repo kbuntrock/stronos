@@ -1,4 +1,4 @@
-package fr.pandorea.stronos;
+package fr.kbu.stronos;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;

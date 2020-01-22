@@ -1,4 +1,4 @@
-package fr.pandorea.stronos;
+package fr.kbu.stronos;
 
 import java.io.ByteArrayOutputStream;
 import javax.sound.sampled.AudioFormat;

@@ -1,4 +1,4 @@
-package fr.pandorea.stronos;
+package fr.kbu.stronos;
 
 import java.io.File;
 import java.io.IOException;
