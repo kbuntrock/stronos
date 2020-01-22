@@ -17,6 +17,7 @@
 
     <modules>
         <module>utils/codegen</module>
+		<module>api</module>
 		<module>back</module>
     </modules>
 
