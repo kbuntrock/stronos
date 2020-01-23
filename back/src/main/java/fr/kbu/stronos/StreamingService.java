@@ -37,7 +37,7 @@ public class StreamingService implements IStream, WebMvcConfigurer {
     return null;
   }
 
-  @GetMapping(value = "", produces = "audio/mp3")
+  @Override
   public ResponseEntity<StreamingResponseBody> stream() {
 
     Mp3Stream stream = new Mp3Stream();
