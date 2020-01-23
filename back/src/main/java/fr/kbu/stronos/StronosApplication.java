@@ -17,6 +17,8 @@ public class StronosApplication {
 
   private static ConfigurableApplicationContext ctx;
 
+  public static final long AWAKE_SINCE = System.currentTimeMillis();
+
   public static void main(String[] args) {
 
     ctx = SpringApplication.run(StronosApplication.class, args);

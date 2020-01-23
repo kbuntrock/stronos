@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+import fr.kbu.stronos.api.dto.ServerInfoDto;
 import fr.kbu.stronos.api.dto.StreamDto;
 import fr.kbu.stronos.api.web.IStream;
 
@@ -61,7 +62,7 @@ public class StreamingService implements IStream, WebMvcConfigurer {
     return "OK";
   }
 
-  @GetMapping(value = "info")
+  // @GetMapping(value = "info")
   public String getTotalSample() {
     StringBuilder builder = new StringBuilder();
 
@@ -88,10 +89,17 @@ public class StreamingService implements IStream, WebMvcConfigurer {
     return String.valueOf(VolumeControler.toogleNormalization());
   }
 
-
   @Override
-  public StreamDto info() {
-    // TODO Auto-generated method stub
-    return null;
+  public ServerInfoDto info() {
+    ServerInfoDto response = new ServerInfoDto();
+
+    AudioLineReader.get().getStreams().forEach(stream -> {
+      StreamDto strDto = new StreamDto();
+      strDto.setStreamedSeconds((long) stream.streamSince());
+      response.getStreamList().add(strDto);
+    });
+    response.setAwakeSince((System.currentTimeMillis() - StronosApplication.AWAKE_SINCE) / 1000);
+    return response;
   }
+
 }

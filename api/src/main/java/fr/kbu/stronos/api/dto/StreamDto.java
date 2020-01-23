@@ -11,9 +11,9 @@ public class StreamDto {
   private String ipAdress;
 
   /**
-   * Value in seconds
+   * Number of seconds of sound which has been streamed
    */
-  private long streamSince;
+  private long streamedSeconds;
 
 
   /**
@@ -45,19 +45,17 @@ public class StreamDto {
   }
 
   /**
-   * @return the streamSince
+   * @return the streamedSeconds
    */
-  public long getStreamSince() {
-    return streamSince;
+  public long getStreamedSeconds() {
+    return streamedSeconds;
   }
 
   /**
-   * @param streamSince the streamSince to set
+   * @param streamedSeconds the streamedSeconds to set
    */
-  public void setStreamSince(long streamSince) {
-    this.streamSince = streamSince;
+  public void setStreamedSeconds(long streamedSeconds) {
+    this.streamedSeconds = streamedSeconds;
   }
-
-
 
 }

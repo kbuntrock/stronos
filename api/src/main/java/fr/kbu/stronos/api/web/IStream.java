@@ -2,7 +2,7 @@ package fr.kbu.stronos.api.web;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import fr.kbu.stronos.api.dto.StreamDto;
+import fr.kbu.stronos.api.dto.ServerInfoDto;
 
 /**
  *
@@ -11,7 +11,7 @@ import fr.kbu.stronos.api.dto.StreamDto;
 @RequestMapping(value = "/stream")
 public interface IStream {
 
-  @GetMapping("/info2")
-  StreamDto info();
+  @GetMapping("/info")
+  ServerInfoDto info();
 
 }
