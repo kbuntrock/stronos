@@ -18,6 +18,7 @@
     <modules>
         <module>utils/codegen</module>
 		<module>api</module>
+		<module>swagger</module>
 		<module>back</module>
     </modules>
 
@@ -25,7 +26,7 @@
         <java.version>11</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <starter.codegen.version>1.0.0-SNAPSHOT</starter.codegen.version>
+        <stronos.codegen.version>1.0.0-SNAPSHOT</stronos.codegen.version>
     </properties>
 
     <dependencyManagement>
@@ -81,7 +82,7 @@
 			<configuration>
 			  <toolchains>
 				<jdk>
-				  <version>11</version>
+				  <version>${java.version}</version>
 				</jdk>
 			  </toolchains>
 			</configuration>

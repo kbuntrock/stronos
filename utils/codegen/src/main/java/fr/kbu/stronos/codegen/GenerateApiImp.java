@@ -37,10 +37,12 @@ public class GenerateApiImp {
   public static void main(final String[] args) throws IOException, ClassNotFoundException {
 
     final String directory = args[0];
-    Class[] classArray = new Reflections("fr.kbu.api.web")
+    Class[] classArray = new Reflections("fr.kbu.stronos.api.web")
         .getTypesAnnotatedWith(RequestMapping.class).toArray(new Class[0]);
 
     System.out.println("############ STARTING CODE GENERATION");
+
+    System.out.println("############ Found " + classArray.length + "webservice(s).");
 
     for (int i = 0; i < classArray.length; i++) {
 
