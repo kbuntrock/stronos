@@ -19,6 +19,7 @@
         <module>utils/codegen</module>
 		<module>api</module>
 		<module>swagger</module>
+		<module>front</module>
 		<module>back</module>
     </modules>
 
