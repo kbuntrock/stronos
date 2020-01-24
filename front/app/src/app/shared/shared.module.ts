@@ -8,7 +8,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
-import {MatDialogModule} from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav'; 
 
 
 @NgModule({
@@ -24,6 +26,8 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatProgressSpinnerModule,
     MatChipsModule,
     MatDialogModule,
+    MatToolbarModule,
+    MatSidenavModule
   ],
   exports: [
     CommonModule,
@@ -36,6 +40,8 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatProgressSpinnerModule,
     MatChipsModule,
     MatDialogModule,
+    MatToolbarModule,
+    MatSidenavModule
   ]
 })
 export class SharedModule { }
