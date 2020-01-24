@@ -10,5 +10,52 @@
     <artifactId>stronos-front-app</artifactId>
     <name>front-app</name>
     <description>Front App</description>
+	
+	<build>
+
+    <plugins>
+
+      <!-- Suppression du répertoire des services -->
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>${project.basedir}/src/generated-sources/rest</directory>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+
+      <!-- Récupération du fichier d'API dans l'archive artifact maven -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>unpack</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>fr.kbu.stronos</groupId>
+                  <artifactId>stronos-front-delegate</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>angular</classifier>
+                  <type>zip</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${project.basedir}/src/generated-sources/rest</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
+  </build>
 
 </project>
