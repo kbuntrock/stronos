@@ -25,6 +25,7 @@ public class Mp3Stream implements StreamingResponseBody {
   private long totalBytes = 0;
 
   private String ipAddress;
+  private String userAgent;
 
   public Mp3Stream() {
     AudioLineReader.get().subscribe(this);
@@ -84,5 +85,21 @@ public class Mp3Stream implements StreamingResponseBody {
   public void setIpAddress(String ipAddress) {
     this.ipAddress = ipAddress;
   }
+
+  /**
+   * @return the userAgent
+   */
+  public String getUserAgent() {
+    return userAgent;
+  }
+
+  /**
+   * @param userAgent the userAgent to set
+   */
+  public void setUserAgent(String userAgent) {
+    this.userAgent = userAgent;
+  }
+
+
 
 }

@@ -10,11 +10,16 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
-import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.TargetDataLine;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Read the audio line. Must exist in only one instance.
+ *
+ * @author Kevin Buntrock
+ *
+ */
 public enum AudioLineReader {
   INSTANCE;
 
@@ -22,8 +27,9 @@ public enum AudioLineReader {
     return INSTANCE;
   }
 
-  public static final int BUFFER_SIZE = 2048;
-
+  /**
+   * Format used for recording : - 44100 Hz - 16 bits per sample - stéréo
+   */
   public static final float SAMPLE_RATE = 44100;
   public static final int SAMPLE_SIZE_IN_BITS = 16;
   // 1 = mono, 2 = stéréo
@@ -31,6 +37,9 @@ public enum AudioLineReader {
 
   private static AudioFormat compressionFormat =
       new AudioFormat(SAMPLE_RATE, SAMPLE_SIZE_IN_BITS, NB_CHANNELS, true, false);
+
+  // Reading buffer size
+  public static final int BUFFER_SIZE = 2048;
 
   private static final Logger logger = LogManager.getLogger(AudioLineReader.class);
 
@@ -40,16 +49,19 @@ public enum AudioLineReader {
 
   private final List<Mp3Stream> streams = new ArrayList<>();
 
-  private final boolean playSoundLocally = false;
-  private SourceDataLine outputLine = null;
-
+  /**
+   * Recorded volume
+   */
   private float volume = 1.0f;
 
+  /**
+   * Private constuctor
+   */
   private AudioLineReader() {
     // Nothing to do
   }
 
-  public synchronized boolean read() {
+  public boolean read() {
 
     if (!reading.get()) {
       try {
@@ -64,14 +76,6 @@ public enum AudioLineReader {
           inputLine.start();
           reading.set(true);
 
-          // Play sound on PC
-          if (playSoundLocally) {
-            outputLine = AudioSystem.getSourceDataLine(compressionFormat);
-            outputLine.open(compressionFormat);
-            outputLine.start();
-          }
-          //
-
           AudioInputStream inputStream = new AudioInputStream(inputLine);
 
           logger.info("Input format : {}", inputStream.getFormat());
@@ -83,11 +87,11 @@ public enum AudioLineReader {
           while (nBytesRead != -1 && reading.get()) {
             nBytesRead = inputStream.read(abData, 0, abData.length);
             if (nBytesRead >= 0) {
-              abData = VolumeControler.adjustVolume(abData, volume);
-              var mp3 = mp3Encoder.encodePcmToMp3(abData);
-              writeToStream(mp3);
-              // outputLine.write(abData, 0, nBytesRead);
-              // logger.info("output " + nBytesRead);
+              if (!streams.isEmpty()) {
+                abData = VolumeUtils.adjustVolume(abData, volume);
+                var mp3 = mp3Encoder.encodePcmToMp3(abData);
+                writeToStream(mp3);
+              }
             }
           }
         }
@@ -130,12 +134,6 @@ public enum AudioLineReader {
       inputLine.stop();
       inputLine.close();
       inputLine = null;
-
-      if (playSoundLocally) {
-        outputLine.stop();
-        outputLine.close();
-        outputLine = null;
-      }
 
       streams.clear();
 

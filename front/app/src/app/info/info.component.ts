@@ -8,6 +8,7 @@ import { ServerInfoDto } from '../../generated-sources/rest/models/server-info-d
   styleUrls: ['./info.component.scss']
 })
 export class InfoComponent implements OnInit {
+  displayedColumns: string[] = ['ipAdress', 'userAgent', 'streamedSeconds'];
   // true if the component has loaded
   loaded = false;
 
@@ -26,23 +27,42 @@ export class InfoComponent implements OnInit {
   }
 
   private setAwakeSince() {
-    const d = Math.floor(this.infoDto.awakeSince / 3600 / 24);
-    const h = Math.floor(this.infoDto.awakeSince / 3600);
-    const m = Math.floor((this.infoDto.awakeSince % 3600) / 60);
-    const s = Math.floor((this.infoDto.awakeSince % 3600) % 60);
+    this.awakeSince = this.formatSeconds(this.infoDto.awakeSince);
+  }
 
-    this.awakeSince = '';
+  private formatSeconds(seconds: number): string {
+    const d = Math.floor(seconds / 3600 / 24);
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = Math.floor((seconds % 3600) % 60);
+
+    let formatted = '';
     if (d > 0) {
-      this.awakeSince += d + ' days, ';
+      formatted += d + 'd, ';
     }
     if (d > 0 || h > 0) {
-      this.awakeSince += h + ' hours, ';
+      formatted += h + 'h, ';
     }
     if (d > 0 || h > 0 || m > 0) {
-      this.awakeSince += m + ' minutes ';
+      formatted += m + 'm ';
     }
-    if (d > 0 || h > 0 || m > 0 || s > 0) {
-      this.awakeSince += 'and ' + s + ' seconds';
+    if (d > 0 || h > 0 || m > 0) {
+      formatted += 'and ' + s + 's';
+    } else if (s > 0) {
+      formatted += s + 's';
     }
+    return formatted;
+  }
+
+  private formatUserAgent(userAgent: string): string {
+    if (userAgent.search('Winamp') > 0) {
+      return 'Sonos';
+    }
+    if (userAgent.length > 20) {
+      let result = userAgent.substring(0, 20);
+      result += '...';
+      return result;
+    }
+    return userAgent;
   }
 }

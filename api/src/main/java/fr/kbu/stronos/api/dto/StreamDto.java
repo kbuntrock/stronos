@@ -15,6 +15,8 @@ public class StreamDto {
    */
   private long streamedSeconds;
 
+  private String userAgent;
+
 
   /**
    * @return the id
@@ -56,6 +58,20 @@ public class StreamDto {
    */
   public void setStreamedSeconds(long streamedSeconds) {
     this.streamedSeconds = streamedSeconds;
+  }
+
+  /**
+   * @return the userAgent
+   */
+  public String getUserAgent() {
+    return userAgent;
+  }
+
+  /**
+   * @param userAgent the userAgent to set
+   */
+  public void setUserAgent(String userAgent) {
+    this.userAgent = userAgent;
   }
 
 }

@@ -45,6 +45,7 @@ public class StreamingService implements IStream, WebMvcConfigurer {
 
     Mp3Stream stream = new Mp3Stream();
     stream.setIpAddress(request.getRemoteAddr());
+    stream.setUserAgent(request.getHeader("User-Agent"));
 
     final HttpHeaders headers = new HttpHeaders();
     headers.setContentDispositionFormData("filename", "stream.mp3");
@@ -85,6 +86,7 @@ public class StreamingService implements IStream, WebMvcConfigurer {
       StreamDto strDto = new StreamDto();
       strDto.setStreamedSeconds((long) stream.streamSince());
       strDto.setIpAdress(stream.getIpAddress());
+      strDto.setUserAgent(stream.getUserAgent());
       response.getStreamList().add(strDto);
     });
     response.setAwakeSince((System.currentTimeMillis() - StronosApplication.AWAKE_SINCE) / 1000);
