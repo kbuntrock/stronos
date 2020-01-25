@@ -10,8 +10,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatSidenavModule } from '@angular/material/sidenav'; 
-
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSliderModule } from '@angular/material/slider';
 
 @NgModule({
   declarations: [],
@@ -27,7 +27,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MatChipsModule,
     MatDialogModule,
     MatToolbarModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatSliderModule
   ],
   exports: [
     CommonModule,
@@ -41,7 +42,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MatChipsModule,
     MatDialogModule,
     MatToolbarModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatSliderModule
   ]
 })
-export class SharedModule { }
+export class SharedModule {}

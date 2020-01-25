@@ -9,7 +9,11 @@
 
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav #sidenav mode="side" opened class="sidenav">
-      <button mat-icon-button class="sidenav-button">
+      <button
+        mat-icon-button
+        class="sidenav-button"
+        (click)="navigateToSettings()"
+      >
         <fa-icon
           [icon]="faCogs"
           class="sidenav-button-icon"
@@ -17,7 +21,11 @@
         ></fa-icon>
         <div class="sidenav-button-text">Settings</div>
       </button>
-      <button mat-icon-button class="sidenav-button">
+      <button
+        mat-icon-button
+        class="sidenav-button"
+        (click)="navigateToInfos()"
+      >
         <fa-icon
           [icon]="faInfoCircle"
           class="sidenav-button-icon"
@@ -28,7 +36,7 @@
     </mat-sidenav>
 
     <mat-sidenav-content>
-      <div>Something</div>
+      <router-outlet></router-outlet>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </ng-container>

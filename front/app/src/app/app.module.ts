@@ -10,9 +10,12 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ApiModule } from './../generated-sources/rest/api.module';
 import { environment } from 'src/environments/environment';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { SettingsComponent } from './settings/settings.component';
+import { InfoComponent } from './info/info.component';
+import { LoaderComponent } from './loader/loader.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, SettingsComponent, InfoComponent, LoaderComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

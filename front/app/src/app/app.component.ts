@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
 import { faCogs, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { AppRoutingModule, AppPath } from './app-routing.module';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,15 @@ export class AppComponent implements OnInit {
   faInfoCircle = faInfoCircle;
   title = 'Stronos';
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   ngOnInit(): void {}
+
+  public navigateToSettings() {
+    this.router.navigate([AppPath.Settings]);
+  }
+
+  public navigateToInfos() {
+    this.router.navigate([AppPath.Info]);
+  }
 }

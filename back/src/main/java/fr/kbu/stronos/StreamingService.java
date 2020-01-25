@@ -5,13 +5,14 @@ import java.text.NumberFormat;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.catalina.connector.ClientAbortException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
@@ -23,6 +24,8 @@ import fr.kbu.stronos.api.web.IStream;
 
 @RestController
 public class StreamingService implements IStream, WebMvcConfigurer {
+
+  private static final Logger logger = LogManager.getLogger(StreamingService.class);
 
   private static final NumberFormat decimalFormat = new DecimalFormat("#0.00");
 
@@ -37,22 +40,17 @@ public class StreamingService implements IStream, WebMvcConfigurer {
     return null;
   }
 
-  @Override
-  public ResponseEntity<StreamingResponseBody> stream() {
+  @GetMapping(value = "", produces = "audio/mp3")
+  public ResponseEntity<StreamingResponseBody> stream(HttpServletRequest request) {
 
     Mp3Stream stream = new Mp3Stream();
+    stream.setIpAddress(request.getRemoteAddr());
+
     final HttpHeaders headers = new HttpHeaders();
     headers.setContentDispositionFormData("filename", "stream.mp3");
 
     return ResponseEntity.ok().headers(headers).contentType(MediaType.valueOf("audio/mp3"))
         .body(stream);
-
-  }
-
-  @GetMapping(value = "test")
-  public String test() {
-
-    return "test";
 
   }
 
@@ -79,16 +77,6 @@ public class StreamingService implements IStream, WebMvcConfigurer {
     return builder.toString();
   }
 
-  @GetMapping(value = "volume")
-  public String volume(@RequestParam float volume) {
-    return String.valueOf(AudioLineReader.get().adjusVolume(volume));
-  }
-
-  @GetMapping("normalize")
-  public String normalize() {
-    return String.valueOf(VolumeControler.toogleNormalization());
-  }
-
   @Override
   public ServerInfoDto info() {
     ServerInfoDto response = new ServerInfoDto();
@@ -96,10 +84,22 @@ public class StreamingService implements IStream, WebMvcConfigurer {
     AudioLineReader.get().getStreams().forEach(stream -> {
       StreamDto strDto = new StreamDto();
       strDto.setStreamedSeconds((long) stream.streamSince());
+      strDto.setIpAdress(stream.getIpAddress());
       response.getStreamList().add(strDto);
     });
     response.setAwakeSince((System.currentTimeMillis() - StronosApplication.AWAKE_SINCE) / 1000);
     return response;
+  }
+
+  @Override
+  public float setVolume(float volume) {
+    logger.info("setVolume {}", volume);
+    return AudioLineReader.get().adjusVolume(volume);
+  }
+
+  @Override
+  public float getVolume() {
+    return AudioLineReader.get().getVolume();
   }
 
 }

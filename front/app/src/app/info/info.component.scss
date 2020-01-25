@@ -1,0 +1,16 @@
+.info-container {
+  font-family: 'Work Sans';
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  flex-direction: column;
+  height: 100%;
+
+  justify-content: flex-start;
+
+  padding-top: 5%;
+}
+
+.infos {
+  width: 50%;
+}

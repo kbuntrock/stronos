@@ -183,4 +183,8 @@ public enum AudioLineReader {
     return volume;
   }
 
+  public float getVolume() {
+    return volume;
+  }
+
 }

@@ -9,6 +9,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+/**
+ *
+ * @author Kevin Buntrock
+ *
+ */
 public class Mp3Stream implements StreamingResponseBody {
 
   private static final Logger logger = LogManager.getLogger(Mp3Stream.class);
@@ -18,6 +23,8 @@ public class Mp3Stream implements StreamingResponseBody {
   public BlockingQueue<byte[]> queue = new LinkedBlockingQueue<>();
 
   private long totalBytes = 0;
+
+  private String ipAddress;
 
   public Mp3Stream() {
     AudioLineReader.get().subscribe(this);
@@ -62,6 +69,20 @@ public class Mp3Stream implements StreamingResponseBody {
   public double streamSince() {
     return totalBytes / (AudioLineReader.SAMPLE_SIZE_IN_BITS / 8 * AudioLineReader.NB_CHANNELS)
         / AudioLineReader.SAMPLE_RATE;
+  }
+
+  /**
+   * @return the ipAddress
+   */
+  public String getIpAddress() {
+    return ipAddress;
+  }
+
+  /**
+   * @param ipAddress the ipAddress to set
+   */
+  public void setIpAddress(String ipAddress) {
+    this.ipAddress = ipAddress;
   }
 
 }

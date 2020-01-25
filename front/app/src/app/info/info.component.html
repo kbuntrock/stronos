@@ -1,0 +1,9 @@
+<div class="info-container">
+  <!-- <app-loader *ngIf="!loaded"></app-loader> -->
+  <ng-container *ngIf="loaded">
+    <h1>Informations</h1>
+    <mat-card class="infos">
+      <div>Server is up since {{ awakeSince }}.</div>
+    </mat-card>
+  </ng-container>
+</div>
