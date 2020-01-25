@@ -9,8 +9,21 @@
 
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav #sidenav mode="side" opened class="sidenav">
-      <button mat-icon-button>
-        <mat-icon>settings_applications</mat-icon>
+      <button mat-icon-button class="sidenav-button">
+        <fa-icon
+          [icon]="faCogs"
+          class="sidenav-button-icon"
+          size="2x"
+        ></fa-icon>
+        <div class="sidenav-button-text">Settings</div>
+      </button>
+      <button mat-icon-button class="sidenav-button">
+        <fa-icon
+          [icon]="faInfoCircle"
+          class="sidenav-button-icon"
+          size="2x"
+        ></fa-icon>
+        <div class="sidenav-button-text">Infos</div>
       </button>
     </mat-sidenav>
 

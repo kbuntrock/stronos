@@ -18,7 +18,30 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100px;
+  width: 80px;
   background: var(--primary-darker-color);
   color: var(--text-primary-darker-color);
+}
+
+.sidenav-button {
+  width: 100%;
+  padding-top: 100%;
+  position: relative;
+  border-radius: 0px !important;
+}
+
+.sidenav-button-icon {
+  position: absolute;
+  top: 20%;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.sidenav-button-text {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }
