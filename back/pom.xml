@@ -14,12 +14,12 @@
 	<description>Stream your audio line to sonos</description>
 
 	<dependencies>
-	
+
 		<dependency>
-            <groupId>fr.kbu.stronos</groupId>
-            <artifactId>stronos-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+			<groupId>fr.kbu.stronos</groupId>
+			<artifactId>stronos-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
 		<!-- MP3 encoder (pure java LAME port) -->
 		<dependency>
@@ -65,5 +65,49 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>build-prod</id>
+			<activation>
+				<property>
+					<name>build</name>
+					<value>prod</value>
+					<!-- mvn -Dbuild=prod clean install -->
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<!-- Récupération du fichier d'API dans l'archive artifact maven -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>unpack</id>
+								<phase>initialize</phase>
+								<goals>
+									<goal>unpack</goal>
+								</goals>
+								<configuration>
+									<artifactItems>
+										<artifactItem>
+											<groupId>fr.kbu.stronos</groupId>
+											<artifactId>stronos-front-app</artifactId>
+											<version>${project.version}</version>
+											<classifier>front</classifier>
+											<type>zip</type>
+											<overWrite>false</overWrite>
+											<outputDirectory>${project.basedir}/static</outputDirectory>
+										</artifactItem>
+									</artifactItems>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>

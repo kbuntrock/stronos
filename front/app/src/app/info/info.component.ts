@@ -30,7 +30,7 @@ export class InfoComponent implements OnInit {
     this.awakeSince = this.formatSeconds(this.infoDto.awakeSince);
   }
 
-  private formatSeconds(seconds: number): string {
+  public formatSeconds(seconds: number): string {
     const d = Math.floor(seconds / 3600 / 24);
     const h = Math.floor(seconds / 3600);
     const m = Math.floor((seconds % 3600) / 60);
@@ -54,7 +54,7 @@ export class InfoComponent implements OnInit {
     return formatted;
   }
 
-  private formatUserAgent(userAgent: string): string {
+  public formatUserAgent(userAgent: string): string {
     if (userAgent.search('Winamp') > 0) {
       return 'Sonos';
     }
