@@ -31,6 +31,7 @@ public class StronosApplication {
   @PostConstruct
   private void launchApp() {
     logger.info("launchApp");
+    AudioLineReader.get().adjusVolume(ConfigurationUtils.getVolume());
     ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
     executor.submit(() -> AudioLineReader.get().read());
   }

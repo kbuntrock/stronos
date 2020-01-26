@@ -96,7 +96,9 @@ public class StreamingService implements IStream, WebMvcConfigurer {
   @Override
   public float setVolume(float volume) {
     logger.info("setVolume {}", volume);
-    return AudioLineReader.get().adjusVolume(volume);
+    volume = AudioLineReader.get().adjusVolume(volume);
+    ConfigurationUtils.saveVolume(volume);
+    return volume;
   }
 
   @Override
