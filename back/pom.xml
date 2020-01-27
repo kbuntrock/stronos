@@ -98,7 +98,7 @@
 											<classifier>front</classifier>
 											<type>zip</type>
 											<overWrite>false</overWrite>
-											<outputDirectory>${project.basedir}/static</outputDirectory>
+											<outputDirectory>${project.basedir}/src/main/resources/static</outputDirectory>
 										</artifactItem>
 									</artifactItems>
 								</configuration>
