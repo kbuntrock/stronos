@@ -63,60 +63,81 @@
 				</executions>
 			</plugin>
 
-			<plugin>
-				<groupId>com.github.eirslett</groupId>
-				<artifactId>frontend-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>install node and npm</id>
-						<goals>
-							<goal>install-node-and-npm</goal>
-						</goals>
-						<phase>initialize</phase>
-					</execution>
-					<execution>
-						<id>npm install</id>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						<phase>initialize</phase>
-					</execution>
-					<execution>
-						<id>npm build prod</id>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						<phase>package</phase>
-						<configuration>
-                            <arguments>run-script build-prod</arguments>
-                        </configuration>
-					</execution>
-				</executions>
-				<configuration>
-					<nodeVersion>${node.version}</nodeVersion>
-				</configuration>
-			</plugin>
-			
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptors>
-						<descriptor>assembly/zip.xml</descriptor>
-					</descriptors>
-					<finalName>stronos-front-app-${project.version}</finalName>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 
 	</build>
+	
+	<profiles>
+		<profile>
+			<id>build-prod</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.github.eirslett</groupId>
+						<artifactId>frontend-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>install node and npm</id>
+								<goals>
+									<goal>install-node-and-npm</goal>
+								</goals>
+								<phase>initialize</phase>
+							</execution>
+							<execution>
+								<id>npm install</id>
+								<goals>
+									<goal>npm</goal>
+								</goals>
+								<phase>initialize</phase>
+							</execution>
+							<execution>
+								<id>npm build prod</id>
+								<goals>
+									<goal>npm</goal>
+								</goals>
+								<phase>package</phase>
+								<configuration>
+									<arguments>run-script build-prod</arguments>
+								</configuration>
+							</execution>
+						</executions>
+						<configuration>
+							<nodeVersion>${node.version}</nodeVersion>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<configuration>
+							<descriptors>
+								<descriptor>assembly/zip.xml</descriptor>
+							</descriptors>
+							<finalName>stronos-front-app-${project.version}</finalName>
+						</configuration>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<property>
+					<!-- mvn clean install -Dev -->
+					<name>ev</name>
+				</property>
+			</activation>
+		</profile>
+	</profiles>
 
 </project>

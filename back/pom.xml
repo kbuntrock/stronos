@@ -63,6 +63,18 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			
+			<!-- Suppression du répertoire des services -->
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>${project.basedir}/src/main/resources/static</directory>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -70,11 +82,7 @@
 		<profile>
 			<id>build-prod</id>
 			<activation>
-				<property>
-					<name>build</name>
-					<value>prod</value>
-					<!-- mvn -Dbuild=prod clean install -->
-				</property>
+				<activeByDefault>true</activeByDefault>
 			</activation>
 			<build>
 				<plugins>
@@ -107,6 +115,15 @@
 					</plugin>
 				</plugins>
 			</build>
+		</profile>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<property>
+					<!-- mvn clean install -Dev -->
+					<name>ev</name>
+				</property>
+			</activation>
 		</profile>
 	</profiles>
 
