@@ -23,6 +23,7 @@ import fr.kbu.stronos.api.dto.StreamDto;
 import fr.kbu.stronos.api.web.IStream;
 import fr.kbu.stronos.audio.AudioLineReader;
 import fr.kbu.stronos.utils.ConfigurationUtils;
+import fr.kbu.stronos.utils.StartupMp3Stream;
 
 @RestController
 public class StreamingService implements IStream, WebMvcConfigurer {
@@ -62,11 +63,13 @@ public class StreamingService implements IStream, WebMvcConfigurer {
     ServerInfoDto response = new ServerInfoDto();
 
     AudioLineReader.get().getStreams().forEach(stream -> {
-      StreamDto strDto = new StreamDto();
-      strDto.setStreamedSeconds((long) stream.streamSince());
-      strDto.setIpAdress(stream.getIpAddress());
-      strDto.setUserAgent(stream.getUserAgent());
-      response.getStreamList().add(strDto);
+      if (!(stream instanceof StartupMp3Stream)) {
+        StreamDto strDto = new StreamDto();
+        strDto.setStreamedSeconds((long) stream.streamSince());
+        strDto.setIpAdress(stream.getIpAddress());
+        strDto.setUserAgent(stream.getUserAgent());
+        response.getStreamList().add(strDto);
+      }
     });
     response.setAwakeSince((System.currentTimeMillis() - StronosApplication.AWAKE_SINCE) / 1000);
     response.setWarmupComplete(StronosApplication.isWarmupComplete());

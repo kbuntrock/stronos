@@ -19,6 +19,19 @@ public class Mp3Stream implements StreamingResponseBody {
 
   private static final Logger logger = LogManager.getLogger(Mp3Stream.class);
 
+  private static byte[] blankBuffer;
+
+  static {
+    try {
+      blankBuffer =
+          Mp3Stream.class.getClassLoader().getResourceAsStream("blank2sec.mp3").readAllBytes();
+    } catch (IOException e) {
+      logger.error("Cannot read blankBuffer mp3.", e);
+      blankBuffer = new byte[0];
+    }
+
+  }
+
   protected boolean shouldRun = true;
 
   public BlockingQueue<byte[]> queue = new LinkedBlockingQueue<>();
@@ -38,6 +51,12 @@ public class Mp3Stream implements StreamingResponseBody {
 
   @Override
   public void writeTo(OutputStream out) throws IOException {
+
+    // When the stream is starting up, we write 2 seconds of empty sound to quickly fill
+    // the Sonos buffer and prevent an early disconnection.
+    out.write(blankBuffer);
+    out.flush();
+
     try {
       int i = 0;
       while (shouldRun) {

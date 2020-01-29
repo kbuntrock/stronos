@@ -14,7 +14,10 @@ import fr.kbu.stronos.web.Mp3Stream;
  * Hotspot, but the JVM could also optimize the run by itself after a few loops of doing the same
  * thing. (https://en.wikipedia.org/wiki/Adaptive_optimization)
  *
- * The goal of this specialized stream is to close itself after a warmup time (2000 loops, = 23 sec)
+ * 1 buffer = 16384 samples | 1 sec = 44100 samples | 1 sec = 44100 / 16384 = 2.69 buffers
+ *
+ * The goal of this specialized stream is to close itself after a warmup time (13 loops approx 4.82
+ * sec)
  *
  * @author Kevin Buntrock
  *
@@ -30,13 +33,12 @@ public class StartupMp3Stream extends Mp3Stream {
       int i = 0;
       while (shouldRun) {
         queue.take();
+
         i++;
         if (logger.isDebugEnabled()) {
-          if (i % 100 == 0) {
-            logger.debug("warmup write buffer n°{}", i);
-          }
+          logger.debug("warmup write buffer n°{}", i);
         }
-        if (i > 2000) {
+        if (i > 13) {
           close();
           StronosApplication.completeWarmup();
         }

@@ -40,7 +40,7 @@ public enum AudioLineReader {
       new AudioFormat(SAMPLE_RATE, SAMPLE_SIZE_IN_BITS, NB_CHANNELS, true, false);
 
   // Reading buffer size
-  public static final int BUFFER_SIZE = 2048;
+  public static final int BUFFER_SIZE = 1024 * 64;
 
   private static final Logger logger = LogManager.getLogger(AudioLineReader.class);
 
