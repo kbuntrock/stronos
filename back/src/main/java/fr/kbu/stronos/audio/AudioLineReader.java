@@ -149,16 +149,14 @@ public enum AudioLineReader {
 
     for (Mixer.Info mi : AudioSystem.getMixerInfo()) {
       logger.info("Available mixer : {}", mi.getName());
-      Mixer targetMixer = AudioSystem.getMixer(mi);
-      try {
+
+      try (Mixer targetMixer = AudioSystem.getMixer(mi)) {
         targetMixer.open();
         // Check if it supports the desired format
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, compressionFormat);
         if (targetMixer.isLineSupported(info)) {
           logger.info("{} supports recording @ {}", mi.getName(), compressionFormat);
           return info;
-        } else {
-          targetMixer.close();
         }
       } catch (LineUnavailableException e) {
         logger.error("Error while finding a supported format.", e);
@@ -167,6 +165,26 @@ public enum AudioLineReader {
     logger.error("Recording not supported!!!");
     return null;
 
+  }
+
+  public List<String> getCompatibleCaptureMixer() {
+
+    List<String> mixerList = new ArrayList<>();
+
+    for (Mixer.Info mi : AudioSystem.getMixerInfo()) {
+
+      try (Mixer targetMixer = AudioSystem.getMixer(mi)) {
+        targetMixer.open();
+        // Check if it supports the desired format
+        DataLine.Info info = new DataLine.Info(TargetDataLine.class, compressionFormat);
+        if (targetMixer.isLineSupported(info)) {
+          mixerList.add(mi.getName());
+        }
+      } catch (LineUnavailableException e) {
+        // Noting to do, that is unfortunate
+      }
+    }
+    return mixerList;
   }
 
   public boolean isReading() {

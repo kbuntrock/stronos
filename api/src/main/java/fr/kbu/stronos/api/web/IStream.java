@@ -1,5 +1,6 @@
 package fr.kbu.stronos.api.web;
 
+import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,10 +17,15 @@ public interface IStream {
   @GetMapping("/info")
   ServerInfoDto info();
 
-  @PostMapping("volume")
+  @PostMapping("/volume")
   float setVolume(@RequestParam float volume);
 
-  @GetMapping("volume")
+  @GetMapping("/volume")
   float getVolume();
 
+  @GetMapping("/capture/available")
+  List<String> getAvailableCaptureDevices();
+
+  @PostMapping("/capture/set")
+  Boolean setCaptureDevice(@RequestParam String name);
 }

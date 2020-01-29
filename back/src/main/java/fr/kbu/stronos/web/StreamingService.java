@@ -2,6 +2,7 @@ package fr.kbu.stronos.web;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.catalina.connector.ClientAbortException;
 import org.apache.logging.log4j.LogManager;
@@ -87,6 +88,17 @@ public class StreamingService implements IStream, WebMvcConfigurer {
   @Override
   public float getVolume() {
     return AudioLineReader.get().getVolume();
+  }
+
+  @Override
+  public List<String> getAvailableCaptureDevices() {
+    return AudioLineReader.get().getCompatibleCaptureMixer();
+  }
+
+  @Override
+  public Boolean setCaptureDevice(String name) {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }
