@@ -2,8 +2,10 @@ package fr.kbu.stronos.audio;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -60,6 +62,29 @@ public enum AudioLineReader {
    */
   private AudioLineReader() {
     // Nothing to do
+  }
+
+  public void start() {
+
+    try {
+
+      DataLine.Info info = getSupportedDataLineInfo("");
+
+      Mp3Encoder mp3Encoder = new Mp3Encoder(compressionFormat);
+
+      inputLine = (TargetDataLine) AudioSystem.getLine(info);
+
+      inputLine.open(compressionFormat);
+      inputLine.start();
+
+
+
+    } catch (NoCaptureDeviceAvailable e) {
+      logger.error("Recording not supported!!!");
+    } catch (LineUnavailableException e) {
+      logger.error("Cannot open input audio line", e);
+    }
+
   }
 
   public boolean read() {
@@ -164,6 +189,60 @@ public enum AudioLineReader {
     }
     logger.error("Recording not supported!!!");
     return null;
+
+  }
+
+  private DataLine.Info getSupportedDataLineInfo(String wantedDeviceName)
+      throws NoCaptureDeviceAvailable {
+
+    List<Mixer.Info> mixers = Arrays.asList(AudioSystem.getMixerInfo());
+    if (wantedDeviceName != null && !wantedDeviceName.isBlank()) {
+      List<Mixer.Info> wantedList = mixers.stream()
+          .filter(m -> wantedDeviceName.equals(m.getName())).collect(Collectors.toList());
+
+      if (!wantedList.isEmpty()) {
+        if (wantedList.size() > 1) {
+          logger.warn(
+              "There is more than one device corresponding to this name : {}. We are picking the first one.",
+              wantedDeviceName);
+        }
+        try (Mixer targetMixer = AudioSystem.getMixer(wantedList.get(0))) {
+          targetMixer.open();
+          // Check if it supports the desired format
+          DataLine.Info info = new DataLine.Info(TargetDataLine.class, compressionFormat);
+          if (targetMixer.isLineSupported(info)) {
+            logger.info("selected device {} supports recording @ {}", wantedDeviceName,
+                compressionFormat);
+            return info;
+          } else {
+            logger.warn("selected device {} DOES NOT supports recording @ {}", wantedDeviceName,
+                compressionFormat);
+          }
+        } catch (LineUnavailableException e) {
+          logger.info("Selected device {} line unavailable.", wantedDeviceName);
+        }
+
+      }
+    }
+
+    logger.warn("Fallback, we select the first available device");
+
+    for (Mixer.Info mi : AudioSystem.getMixerInfo()) {
+      logger.info("Available mixer : {}", mi.getName());
+
+      try (Mixer targetMixer = AudioSystem.getMixer(mi)) {
+        targetMixer.open();
+        // Check if it supports the desired format
+        DataLine.Info info = new DataLine.Info(TargetDataLine.class, compressionFormat);
+        if (targetMixer.isLineSupported(info)) {
+          logger.info("{} supports recording @ {}", mi.getName(), compressionFormat);
+          return info;
+        }
+      } catch (LineUnavailableException e) {
+        logger.error("Error while finding a supported format.", e);
+      }
+    }
+    throw new NoCaptureDeviceAvailable();
 
   }
 
