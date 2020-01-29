@@ -12,6 +12,9 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import fr.kbu.stronos.audio.AudioLineReader;
+import fr.kbu.stronos.utils.ConfigurationUtils;
+import fr.kbu.stronos.utils.StartupMp3Stream;
 
 @SpringBootApplication
 public class StronosApplication {
@@ -22,18 +25,36 @@ public class StronosApplication {
 
   public static final long AWAKE_SINCE = System.currentTimeMillis();
 
+  private static boolean warmupComplete = false;
+
   public static void main(String[] args) {
 
     ctx = SpringApplication.run(StronosApplication.class, args);
 
   }
 
+  public static void completeWarmup() {
+    logger.info("Warmup is complete!");
+    warmupComplete = true;
+  }
+
+  public static boolean isWarmupComplete() {
+    return warmupComplete;
+  }
+
   @PostConstruct
   private void launchApp() {
-    logger.info("launchApp");
+    logger.info("Stronos App startup");
     AudioLineReader.get().adjusVolume(ConfigurationUtils.getVolume());
     ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
     executor.submit(() -> AudioLineReader.get().read());
+
+    // Create a new startup autoclosable mp3Stream for warmup
+    executor.submit(() -> {
+      StartupMp3Stream s = new StartupMp3Stream();
+      s.warmup();
+    });
+
   }
 
   @PreDestroy

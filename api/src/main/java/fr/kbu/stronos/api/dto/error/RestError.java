@@ -1,10 +1,14 @@
 package fr.kbu.stronos.api.dto.error;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+/**
+ *
+ * @author Kevin Buntrock
+ *
+ */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class RestError {
 

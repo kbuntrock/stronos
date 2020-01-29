@@ -5,11 +5,16 @@ import java.util.List;
 
 /**
  * Server info Dto
- * 
+ *
  * @author Kevin Buntrock
  *
  */
 public class ServerInfoDto {
+
+  /**
+   * Indicate if the app is ready to broadcast audio
+   */
+  private boolean warmupComplete;
 
   /**
    * Value in seconds
@@ -48,5 +53,21 @@ public class ServerInfoDto {
   public void setStreamList(List<StreamDto> streamList) {
     this.streamList = streamList;
   }
+
+  /**
+   * @return the warmupComplete
+   */
+  public boolean isWarmupComplete() {
+    return warmupComplete;
+  }
+
+  /**
+   * @param warmupComplete the warmupComplete to set
+   */
+  public void setWarmupComplete(boolean warmupComplete) {
+    this.warmupComplete = warmupComplete;
+  }
+
+
 
 }

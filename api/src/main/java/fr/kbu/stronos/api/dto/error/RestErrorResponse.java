@@ -3,6 +3,11 @@ package fr.kbu.stronos.api.dto.error;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author Kevin Buntrock
+ *
+ */
 public class RestErrorResponse {
   private List<RestError> errors = new ArrayList<>();
 
@@ -15,7 +20,7 @@ public class RestErrorResponse {
   }
 
   public void addError(RestError error) {
-    this.errors.add(error);
+    errors.add(error);
   }
 
 }

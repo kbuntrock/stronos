@@ -1,4 +1,4 @@
-package fr.kbu.stronos;
+package fr.kbu.stronos.audio;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,6 +13,7 @@ import javax.sound.sampled.Mixer;
 import javax.sound.sampled.TargetDataLine;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import fr.kbu.stronos.web.Mp3Stream;
 
 /**
  * Read the audio line. Must exist in only one instance.

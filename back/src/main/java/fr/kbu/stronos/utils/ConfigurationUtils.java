@@ -1,4 +1,4 @@
-package fr.kbu.stronos;
+package fr.kbu.stronos.utils;
 
 import java.io.BufferedReader;
 import java.io.File;

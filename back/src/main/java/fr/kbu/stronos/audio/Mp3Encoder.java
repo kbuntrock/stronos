@@ -1,4 +1,4 @@
-package fr.kbu.stronos;
+package fr.kbu.stronos.audio;
 
 import java.io.ByteArrayOutputStream;
 import javax.sound.sampled.AudioFormat;

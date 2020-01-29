@@ -1,8 +1,7 @@
-package fr.kbu.stronos;
+package fr.kbu.stronos.web;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.catalina.connector.ClientAbortException;
 import org.apache.logging.log4j.LogManager;
@@ -18,9 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+import fr.kbu.stronos.StronosApplication;
 import fr.kbu.stronos.api.dto.ServerInfoDto;
 import fr.kbu.stronos.api.dto.StreamDto;
 import fr.kbu.stronos.api.web.IStream;
+import fr.kbu.stronos.audio.AudioLineReader;
+import fr.kbu.stronos.utils.ConfigurationUtils;
 
 @RestController
 public class StreamingService implements IStream, WebMvcConfigurer {
@@ -31,7 +33,7 @@ public class StreamingService implements IStream, WebMvcConfigurer {
 
   @Override
   public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
-    configurer.setDefaultTimeout(100000000); // in milliseconds (20 hours)
+    configurer.setDefaultTimeout(1000 * 60 * 60 * 48); // (48 hours)
   }
 
   @ExceptionHandler(ClientAbortException.class)
@@ -55,29 +57,6 @@ public class StreamingService implements IStream, WebMvcConfigurer {
 
   }
 
-  @GetMapping(value = "stop")
-  public String stop() {
-    AudioLineReader.get().closeStreams();
-    return "OK";
-  }
-
-  // @GetMapping(value = "info")
-  public String getTotalSample() {
-    StringBuilder builder = new StringBuilder();
-
-    List<Mp3Stream> streams = AudioLineReader.get().getStreams();
-    builder.append(streams.size());
-    builder.append(" streams<br>");
-    for (int i = 1; i <= streams.size(); i++) {
-      builder.append(i);
-      builder.append(" - streamed ");
-      builder.append(decimalFormat.format(streams.get(i - 1).streamSince()));
-      builder.append("s<br>");
-    }
-
-    return builder.toString();
-  }
-
   @Override
   public ServerInfoDto info() {
     ServerInfoDto response = new ServerInfoDto();
@@ -90,6 +69,7 @@ public class StreamingService implements IStream, WebMvcConfigurer {
       response.getStreamList().add(strDto);
     });
     response.setAwakeSince((System.currentTimeMillis() - StronosApplication.AWAKE_SINCE) / 1000);
+    response.setWarmupComplete(StronosApplication.isWarmupComplete());
     return response;
   }
 

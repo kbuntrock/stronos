@@ -1,4 +1,4 @@
-package fr.kbu.stronos;
+package fr.kbu.stronos.audio;
 
 /**
  * Adjust the recording volume

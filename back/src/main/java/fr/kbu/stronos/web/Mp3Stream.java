@@ -1,4 +1,4 @@
-package fr.kbu.stronos;
+package fr.kbu.stronos.web;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -8,6 +8,7 @@ import org.apache.catalina.connector.ClientAbortException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+import fr.kbu.stronos.audio.AudioLineReader;
 
 /**
  *
@@ -18,11 +19,11 @@ public class Mp3Stream implements StreamingResponseBody {
 
   private static final Logger logger = LogManager.getLogger(Mp3Stream.class);
 
-  private boolean shouldRun = true;
+  protected boolean shouldRun = true;
 
   public BlockingQueue<byte[]> queue = new LinkedBlockingQueue<>();
 
-  private long totalBytes = 0;
+  protected long totalBytes = 0;
 
   private String ipAddress;
   private String userAgent;
@@ -39,16 +40,19 @@ public class Mp3Stream implements StreamingResponseBody {
   public void writeTo(OutputStream out) throws IOException {
     try {
       int i = 0;
-      while (shouldRun) { // && i < 800) {
+      while (shouldRun) {
         out.write(queue.take());
         out.flush();
 
         totalBytes += AudioLineReader.BUFFER_SIZE;
 
-        i++;
-        if (i % 100 == 0) {
-          logger.info(i);
+        if (logger.isDebugEnabled()) {
+          i++;
+          if (i % 100 == 0) {
+            logger.debug("mp3Stream write buffer n°{}", i);
+          }
         }
+
 
       }
 

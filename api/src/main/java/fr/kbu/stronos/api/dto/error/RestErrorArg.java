@@ -1,5 +1,10 @@
 package fr.kbu.stronos.api.dto.error;
 
+/**
+ *
+ * @author Kevin Buntrock
+ *
+ */
 public class RestErrorArg {
 
   private String label;
