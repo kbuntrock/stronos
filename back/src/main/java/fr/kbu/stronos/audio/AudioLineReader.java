@@ -64,7 +64,7 @@ public enum AudioLineReader {
     // Nothing to do
   }
 
-  public void start() {
+  public void openAudioLine() {
 
     try {
 
