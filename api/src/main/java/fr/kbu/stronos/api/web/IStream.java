@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import fr.kbu.stronos.api.dto.CapturePeripheral;
 import fr.kbu.stronos.api.dto.ServerInfoDto;
 
 /**
@@ -24,7 +25,7 @@ public interface IStream {
   float getVolume();
 
   @GetMapping("/capture/available")
-  List<String> getAvailableCaptureDevices();
+  List<CapturePeripheral> getAvailableCaptureDevices();
 
   @PostMapping("/capture/set")
   Boolean setCaptureDevice(@RequestParam String name);

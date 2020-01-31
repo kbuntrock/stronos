@@ -2,8 +2,10 @@ package fr.kbu.stronos.web;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.sound.sampled.LineUnavailableException;
 import org.apache.catalina.connector.ClientAbortException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,11 +21,13 @@ import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import fr.kbu.stronos.StronosApplication;
+import fr.kbu.stronos.api.dto.CapturePeripheral;
 import fr.kbu.stronos.api.dto.ServerInfoDto;
 import fr.kbu.stronos.api.dto.StreamDto;
 import fr.kbu.stronos.api.web.IStream;
 import fr.kbu.stronos.audio.AudioLineReader;
-import fr.kbu.stronos.utils.ConfigurationUtils;
+import fr.kbu.stronos.audio.NoCaptureDeviceAvailable;
+import fr.kbu.stronos.utils.ConfigurationManager;
 import fr.kbu.stronos.utils.StartupMp3Stream;
 
 @RestController
@@ -81,7 +85,7 @@ public class StreamingService implements IStream, WebMvcConfigurer {
   public float setVolume(float volume) {
     logger.info("setVolume {}", volume);
     volume = AudioLineReader.get().adjusVolume(volume);
-    ConfigurationUtils.saveVolume(volume);
+    ConfigurationManager.saveVolume(volume);
     return volume;
   }
 
@@ -91,14 +95,35 @@ public class StreamingService implements IStream, WebMvcConfigurer {
   }
 
   @Override
-  public List<String> getAvailableCaptureDevices() {
-    return AudioLineReader.get().getCompatibleCaptureMixer();
+  public List<CapturePeripheral> getAvailableCaptureDevices() {
+    List<String> allDevices = AudioLineReader.get().getCompatibleCaptureMixer();
+    String selectedOne = AudioLineReader.get().getCurrentRecordingDevice();
+    List<CapturePeripheral> result = new ArrayList<>();
+    for (String d : allDevices) {
+      result.add(new CapturePeripheral(d, null, d.equals(selectedOne)));
+    }
+    return result;
   }
 
   @Override
   public Boolean setCaptureDevice(String name) {
-    // TODO Auto-generated method stub
-    return null;
+    if (!AudioLineReader.get().getCurrentRecordingDevice().equals(name)
+        && AudioLineReader.get().getCompatibleCaptureMixer().contains(name)) {
+
+      AudioLineReader.get().stop();
+      try {
+        AudioLineReader.get().openAudioLine(name);
+        StronosApplication.getThreadPool().submit(() -> AudioLineReader.get().read());
+      } catch (NoCaptureDeviceAvailable | LineUnavailableException e) {
+        logger.error("Cannot switch capturing device", e);
+        return false;
+      }
+
+    } else {
+      logger.info("This recording device is already selected");
+    }
+    return true;
+
   }
 
 }
