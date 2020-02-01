@@ -9,4 +9,6 @@ export class ListenComponent implements OnInit, OnDestroy {
   constructor() {}
 
   ngOnInit() {}
+
+  ngOnDestroy() {}
 }
