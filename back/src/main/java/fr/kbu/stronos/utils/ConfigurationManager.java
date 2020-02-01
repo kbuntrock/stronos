@@ -16,18 +16,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author Kevin Buntrock
  *
  */
-public class ConfigurationManager {
+public enum ConfigurationManager {
+  INSTANCE;
 
   private static final Logger logger = LogManager.getLogger(ConfigurationManager.class);
 
-  private static final String CONFIG_FILENAME = "stronos-config.txt";
+  private static final String CONFIG_FILENAME = "stronos.config";
   private static final String CONFIG_FILE_PATH = System.getProperty("user.home") + File.separator
       + ".stronos" + File.separator + CONFIG_FILENAME;
 
-  private static final String VOLUME_PROP_NAME = "volume";
-  private static final String CAPTURE_DEVICE_PROP_NAME = "capture";
+  public static ConfigurationManager get() {
+    return INSTANCE;
+  }
 
-  private final Configuration configuration = new Configuration();
+  private Configuration configuration = null;
 
   /**
    * Private constructor
@@ -36,14 +38,22 @@ public class ConfigurationManager {
     // Nothing to do
   }
 
-  public void saveVolumeNew(float volume) {
-    configuration.setVolume(String.valueOf(volume));
+  public void saveVolume(float volume) {
+    getConfiguration().setVolume(String.valueOf(volume));
     saveConfiguration();
   }
 
   public void saveRecordingDevice(String recordingDevice) {
-    configuration.setRecordingDevice(recordingDevice);
+    getConfiguration().setRecordingDevice(recordingDevice);
     saveConfiguration();
+  }
+
+  public float getVolume() {
+    return Float.valueOf(getConfiguration().getVolume());
+  }
+
+  public String getRecordingDevice() {
+    return getConfiguration().getRecordingDevice();
   }
 
   private void saveConfiguration() {
@@ -77,72 +87,33 @@ public class ConfigurationManager {
 
   }
 
-  public static void saveVolume(float volume) {
-
-    File file = new File(CONFIG_FILE_PATH);
-    if (!file.exists()) {
-      try {
-        file.getParentFile().mkdirs();
-        file.createNewFile();
-      } catch (IOException e) {
-        logger.error("Connot create configuration file", e);
-      }
+  private Configuration getConfiguration() {
+    if (configuration != null) {
+      return configuration;
     }
+    File file = new File(CONFIG_FILE_PATH);
     if (file.exists()) {
-      FileWriter fileWriter;
-      try {
-        fileWriter = new FileWriter(file);
-        PrintWriter printWriter = new PrintWriter(fileWriter);
-        printWriter.printf(VOLUME_PROP_NAME + "=%s\n", String.valueOf(volume));
-        printWriter.close();
+      try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+
+        StringBuilder sb = new StringBuilder();
+        String st;
+        while ((st = br.readLine()) != null) {
+          sb.append(st);
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        configuration = mapper.readValue(sb.toString(), Configuration.class);
+        return configuration;
+
       } catch (IOException e) {
-        logger.error("Cannot write to configuration file", e);
+        logger.error("Impossible to read conf file", e);
       }
+
     }
+    configuration = new Configuration();
+    configuration.setVolume(String.valueOf(1.0f));
+    return configuration;
   }
 
-  public static float getVolume() {
-    File file = new File(CONFIG_FILE_PATH);
-    if (!file.exists()) {
-      return 1.0f;
-    }
-    BufferedReader br;
-    try {
-      br = new BufferedReader(new FileReader(file));
-      String st;
-      while ((st = br.readLine()) != null) {
-        if (st.contains(VOLUME_PROP_NAME + "=")) {
-          br.close();
-          return Float.valueOf(st.replaceAll(VOLUME_PROP_NAME + "=", ""));
-        }
-      }
-    } catch (IOException e) {
-      logger.error("Cannot read configuration file", e);
-    }
-
-    return 1.0f;
-  }
-
-  public static float getCaptureDevice() {
-    File file = new File(CONFIG_FILE_PATH);
-    if (!file.exists()) {
-      return 1.0f;
-    }
-    BufferedReader br;
-    try {
-      br = new BufferedReader(new FileReader(file));
-      String st;
-      while ((st = br.readLine()) != null) {
-        if (st.contains(CAPTURE_DEVICE_PROP_NAME + "=")) {
-          br.close();
-          return Float.valueOf(st.replaceAll(CAPTURE_DEVICE_PROP_NAME + "=", ""));
-        }
-      }
-    } catch (IOException e) {
-      logger.error("Cannot read configuration file", e);
-    }
-
-    return 1.0f;
-  }
 }
 

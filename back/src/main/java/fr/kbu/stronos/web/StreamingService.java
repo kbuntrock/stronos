@@ -85,7 +85,7 @@ public class StreamingService implements IStream, WebMvcConfigurer {
   public float setVolume(float volume) {
     logger.info("setVolume {}", volume);
     volume = AudioLineReader.get().adjusVolume(volume);
-    ConfigurationManager.saveVolume(volume);
+    ConfigurationManager.get().saveVolume(volume);
     return volume;
   }
 
@@ -107,6 +107,9 @@ public class StreamingService implements IStream, WebMvcConfigurer {
 
   @Override
   public Boolean setCaptureDevice(String name) {
+
+    ConfigurationManager.get().saveRecordingDevice(name);
+
     if (!AudioLineReader.get().getCurrentRecordingDevice().equals(name)
         && AudioLineReader.get().getCompatibleCaptureMixer().contains(name)) {
 

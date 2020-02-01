@@ -33,7 +33,7 @@ public class StronosApplication {
 
   /**
    * Launche the app
-   * 
+   *
    * @param args
    */
   public static void main(String[] args) {
@@ -71,10 +71,10 @@ public class StronosApplication {
   @PostConstruct
   private void launchApp() {
     logger.info("Stronos App startup");
-    AudioLineReader.get().adjusVolume(ConfigurationManager.getVolume());
+    AudioLineReader.get().adjusVolume(ConfigurationManager.get().getVolume());
 
     try {
-      AudioLineReader.get().openAudioLine(null);
+      AudioLineReader.get().openAudioLine(ConfigurationManager.get().getRecordingDevice());
       // Start the read loop
       thPool.submit(() -> AudioLineReader.get().read());
 
