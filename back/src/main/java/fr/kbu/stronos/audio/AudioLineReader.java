@@ -42,7 +42,7 @@ public enum AudioLineReader {
       new AudioFormat(SAMPLE_RATE, SAMPLE_SIZE_IN_BITS, NB_CHANNELS, true, false);
 
   // Reading buffer size
-  public static final int BUFFER_SIZE = 1024 * 32;
+  public static final int BUFFER_SIZE = 1024 * 64;
 
   private static final Logger logger = LogManager.getLogger(AudioLineReader.class);
 
@@ -113,12 +113,11 @@ public enum AudioLineReader {
 
       while (nBytesRead != -1 && reading.get()) {
         nBytesRead = inputStream.read(abData, 0, abData.length);
-        if (nBytesRead >= 0) {
-          if (!streams.isEmpty()) {
-            abData = VolumeUtils.adjustVolume(abData, volume);
-            var mp3 = mp3Encoder.encodePcmToMp3(abData);
-            writeToStream(mp3, nBytesRead);
-          }
+        logger.info(nBytesRead);
+        if (nBytesRead >= 0 && !streams.isEmpty()) {
+          abData = VolumeUtils.adjustVolume(abData, volume);
+          var mp3 = mp3Encoder.encodePcmToMp3(abData);
+          writeToStream(mp3, nBytesRead);
         }
       }
 
