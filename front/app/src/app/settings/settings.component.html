@@ -1,23 +1,44 @@
 <div class="settings-container">
   <ng-container *ngIf="loaded">
-    <h1>Settings</h1>
-    <mat-card class="volume">
-      <mat-card-content>
-        <h2>Volume</h2>
-
-        <div>
-          1
-          <mat-slider
-            class="volume-slider"
-            thumbLabel
-            min="1"
-            max="10"
-            step="0.2"
-            [(ngModel)]="volume"
-            (change)="updateVolume()"
-          ></mat-slider>
-          10
-        </div>
+    <mat-card class="setting-card">
+      <mat-card-title>Settings</mat-card-title>
+      <mat-card-subtitle>Set your favorite parameters.</mat-card-subtitle>
+    </mat-card>
+    <mat-card class="setting-card">
+      <mat-card-title>Volume</mat-card-title>
+      <mat-card-subtitle>Set the recording volume.</mat-card-subtitle>
+      <mat-card-content class="slider-container">
+        <mat-icon class="volume-icon">volume_down</mat-icon>
+        <mat-slider
+          class="volume-slider"
+          thumbLabel
+          min="1"
+          max="10"
+          step="0.2"
+          [(ngModel)]="volume"
+          (change)="updateVolume()"
+        ></mat-slider>
+        <mat-icon class="volume-icon">volume_up</mat-icon>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="setting-card">
+      <mat-card-title>Recording peripheral</mat-card-title>
+      <mat-card-subtitle>Select a favourite device.</mat-card-subtitle>
+      <mat-card-content class="peripheral-container">
+        <mat-form-field class="peripheral-form">
+          <mat-select
+            [(ngModel)]="selectedPeripheral"
+            (selectionChange)="selectCapturePeripheral()"
+          >
+            <mat-option
+              class="peripheral-option"
+              *ngFor="let p of peripherals"
+              [value]="p.name"
+            >
+              {{ p.name }} {{ p.active ? '(Current)' : '' }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </mat-card-content>
     </mat-card>
   </ng-container>

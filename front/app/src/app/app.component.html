@@ -1,27 +1,23 @@
 <ng-container>
   <mat-toolbar color="primary">
-    <button mat-icon-button>
-      /<!--(click)="sidenav.toggle()"-->
+    <!-- <button mat-icon-button (click)="sidenav.toggle()">
       <mat-icon>library_music</mat-icon>
-    </button>
+    </button> -->
+    <mat-icon>library_music</mat-icon>
     <span class="title">Stronos</span>
     <span class="spacer"></span>
+    <mat-menu #appMenu="matMenu">
+      <button mat-menu-item (click)="navigateToInfos()">Infos</button>
+      <button mat-menu-item (click)="navigateToSettings()">Settings</button>
+      <!-- <button mat-menu-item (click)="navigateToListen()">Listen</button> -->
+    </mat-menu>
+    <button [matMenuTriggerFor]="appMenu" class="menu_button" mat-icon-button>
+      <mat-icon>menu</mat-icon>
+    </button>
   </mat-toolbar>
 
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav #sidenav mode="side" opened class="sidenav">
-      <button
-        mat-icon-button
-        class="sidenav-button"
-        (click)="navigateToSettings()"
-      >
-        <fa-icon
-          [icon]="faCogs"
-          class="sidenav-button-icon"
-          size="2x"
-        ></fa-icon>
-        <div class="sidenav-button-text">Settings</div>
-      </button>
       <button
         mat-icon-button
         class="sidenav-button"
@@ -34,6 +30,30 @@
         ></fa-icon>
         <div class="sidenav-button-text">Infos</div>
       </button>
+      <button
+        mat-icon-button
+        class="sidenav-button"
+        (click)="navigateToSettings()"
+      >
+        <fa-icon
+          [icon]="faCogs"
+          class="sidenav-button-icon"
+          size="2x"
+        ></fa-icon>
+        <div class="sidenav-button-text">Settings</div>
+      </button>
+      <!-- <button
+        mat-icon-button
+        class="sidenav-button"
+        (click)="navigateToListen()"
+      >
+        <fa-icon
+          [icon]="faHeadphones"
+          class="sidenav-button-icon"
+          size="2x"
+        ></fa-icon>
+        <div class="sidenav-button-text">Listen</div>
+      </button> -->
     </mat-sidenav>
 
     <mat-sidenav-content>

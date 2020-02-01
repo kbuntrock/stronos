@@ -4,15 +4,18 @@
   flex-wrap: wrap;
   align-content: center;
   flex-direction: column;
-  height: 100%;
 
   justify-content: flex-start;
 
-  padding-top: 5%;
+  padding-top: 5vh;
+  padding-right: 8vw;
+  padding-left: 8vw;
 }
 
-.infos {
-  width: 50%;
+.info-card {
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 2vh;
 }
 
 .list {

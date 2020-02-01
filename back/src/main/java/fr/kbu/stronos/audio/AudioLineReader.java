@@ -42,7 +42,7 @@ public enum AudioLineReader {
       new AudioFormat(SAMPLE_RATE, SAMPLE_SIZE_IN_BITS, NB_CHANNELS, true, false);
 
   // Reading buffer size
-  public static final int BUFFER_SIZE = 1024 * 64;
+  public static final int BUFFER_SIZE = 1024 * 32;
 
   private static final Logger logger = LogManager.getLogger(AudioLineReader.class);
 
@@ -117,7 +117,7 @@ public enum AudioLineReader {
           if (!streams.isEmpty()) {
             abData = VolumeUtils.adjustVolume(abData, volume);
             var mp3 = mp3Encoder.encodePcmToMp3(abData);
-            writeToStream(mp3);
+            writeToStream(mp3, nBytesRead);
           }
         }
       }
@@ -128,9 +128,9 @@ public enum AudioLineReader {
     return;
   }
 
-  private void writeToStream(byte[] mp3) {
+  private void writeToStream(byte[] mp3, long nBytesRead) {
     for (Mp3Stream stream : streams) {
-      stream.put(mp3);
+      stream.put(mp3, nBytesRead);
     }
   }
 
@@ -173,7 +173,7 @@ public enum AudioLineReader {
 
   /**
    * Return the name of the current recording device
-   * 
+   *
    * @return a mixer name
    */
   public String getCurrentRecordingDevice() {

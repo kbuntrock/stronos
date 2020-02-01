@@ -15,12 +15,22 @@
 }
 
 .sidenav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 80px;
-  background: var(--primary-darker-color);
-  color: var(--text-primary-darker-color);
+  display: none;
+}
+
+@media only screen and (min-width: 768px) {
+  .sidenav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    background: var(--primary-darker-color);
+    color: var(--text-primary-darker-color);
+  }
+
+  .menu_button {
+    display: none;
+  }
 }
 
 .sidenav-button {

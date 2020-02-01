@@ -45,8 +45,9 @@ public class Mp3Stream implements StreamingResponseBody {
     AudioLineReader.get().subscribe(this);
   }
 
-  public void put(byte[] buffer) {
+  public void put(byte[] buffer, long nbBytes) {
     queue.add(buffer);
+    totalBytes += nbBytes;
   }
 
   @Override
@@ -62,8 +63,6 @@ public class Mp3Stream implements StreamingResponseBody {
       while (shouldRun) {
         out.write(queue.take());
         out.flush();
-
-        totalBytes += AudioLineReader.BUFFER_SIZE;
 
         if (logger.isDebugEnabled()) {
           i++;

@@ -13,9 +13,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SettingsComponent } from './settings/settings.component';
 import { InfoComponent } from './info/info.component';
 import { LoaderComponent } from './loader/loader.component';
+import { ListenComponent } from './audio/listen/listen.component';
 
 @NgModule({
-  declarations: [AppComponent, SettingsComponent, InfoComponent, LoaderComponent],
+  declarations: [AppComponent, SettingsComponent, InfoComponent, LoaderComponent, ListenComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

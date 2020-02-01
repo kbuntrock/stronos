@@ -1,8 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
-import { faCogs, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCogs,
+  faInfoCircle,
+  faHeadphones
+} from '@fortawesome/free-solid-svg-icons';
 import { AppRoutingModule, AppPath } from './app-routing.module';
+import { ListenComponent } from './audio/listen/listen.component';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +17,7 @@ import { AppRoutingModule, AppPath } from './app-routing.module';
 export class AppComponent implements OnInit {
   faCogs = faCogs;
   faInfoCircle = faInfoCircle;
+  faHeadphones = faHeadphones;
   title = 'Stronos';
 
   constructor(private router: Router) {}
@@ -24,5 +30,9 @@ export class AppComponent implements OnInit {
 
   public navigateToInfos() {
     this.router.navigate([AppPath.Info]);
+  }
+
+  public navigateToListen() {
+    this.router.navigate([AppPath.Listen]);
   }
 }

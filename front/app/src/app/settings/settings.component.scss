@@ -4,17 +4,40 @@
   flex-wrap: wrap;
   align-content: center;
   flex-direction: column;
-  height: 100%;
 
   justify-content: flex-start;
 
-  padding-top: 5%;
+  padding-top: 5vh;
+  padding-right: 8vw;
+  padding-left: 8vw;
 }
 
-.volume {
-  width: 50%;
+.setting-card {
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 2vh;
+}
+
+.slider-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .volume-slider {
   width: 90%;
+}
+
+.peripheral-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.peripheral-form {
+  width: 100%;
+}
+
+.peripheral-option {
+  font-family: 'Work Sans';
 }

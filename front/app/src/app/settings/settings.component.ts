@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StreamService } from 'src/generated-sources/rest/services';
+import { CapturePeripheral } from 'src/generated-sources/rest/models';
 
 @Component({
   selector: 'app-settings',
@@ -9,6 +10,10 @@ import { StreamService } from 'src/generated-sources/rest/services';
 export class SettingsComponent implements OnInit {
   // true if the component has loaded
   loaded = false;
+  requests = 0;
+
+  peripherals: Array<CapturePeripheral>;
+  selectedPeripheral: string;
 
   volume = 1;
 
@@ -17,8 +22,21 @@ export class SettingsComponent implements OnInit {
   ngOnInit() {
     this.streamService.getVolumeUsingGET().subscribe(volume => {
       this.volume = volume;
-      this.loaded = true;
+      this.updateLoadedState();
     });
+    this.streamService
+      .getAvailableCaptureDevicesUsingGET()
+      .subscribe(peripherals => {
+        this.peripherals = peripherals;
+        this.updateLoadedState();
+      });
+  }
+
+  private updateLoadedState() {
+    this.requests += 1;
+    if (this.requests >= 2) {
+      this.loaded = true;
+    }
   }
 
   updateVolume() {
@@ -26,5 +44,17 @@ export class SettingsComponent implements OnInit {
     this.streamService.setVolumeUsingPOST(this.volume).subscribe(volume => {
       this.volume = volume;
     });
+  }
+
+  selectCapturePeripheral() {
+    this.streamService
+      .setCaptureDeviceUsingPOST(this.selectedPeripheral)
+      .subscribe(result => {
+        this.streamService
+          .getAvailableCaptureDevicesUsingGET()
+          .subscribe(peripherals => {
+            this.peripherals = peripherals;
+          });
+      });
   }
 }
