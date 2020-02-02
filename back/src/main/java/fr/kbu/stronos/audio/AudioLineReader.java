@@ -41,8 +41,8 @@ public enum AudioLineReader {
   private static final AudioFormat compressionFormat =
       new AudioFormat(SAMPLE_RATE, SAMPLE_SIZE_IN_BITS, NB_CHANNELS, true, false);
 
-  // Reading buffer size
-  public static final int BUFFER_SIZE = 1024 * 64;
+  // Reading buffer size, dependant of the audio line buffer
+  public static int bufferSize = 1024 * 64;
 
   private static final Logger logger = LogManager.getLogger(AudioLineReader.class);
 
@@ -63,11 +63,13 @@ public enum AudioLineReader {
 
   private String currentRecordingDevice;
 
+  private List<String> recordingDeviceList;
+
   /**
    * Private constuctor
    */
   private AudioLineReader() {
-    // Nothing to do
+    initCompatibleDeviceList();
   }
 
   public synchronized void openAudioLine(final String captureDeviceName)
@@ -79,6 +81,17 @@ public enum AudioLineReader {
     mp3Encoder = new Mp3Encoder(compressionFormat);
 
     inputLine = (TargetDataLine) AudioSystem.getLine(info.getDataLineInfo());
+
+    bufferSize = (inputLine.getBufferSize() / 5);
+    // We want a multiple of 2, because each sample takes 2 bytes
+    bufferSize += bufferSize % 2;
+
+    logger.info("Target data line buffer size : {}", inputLine.getBufferSize());
+    logger.info("App buffer size : {}", bufferSize);
+
+    inputLine.addLineListener(event -> {
+      logger.warn("Audio line event received : " + event.getType() + " - " + event.getSource());
+    });
 
     inputLine.open(compressionFormat);
     inputLine.start();
@@ -109,11 +122,11 @@ public enum AudioLineReader {
       logger.info("Audio line read started");
 
       int nBytesRead = 0;
-      byte[] abData = new byte[BUFFER_SIZE];
+      byte[] abData = new byte[bufferSize];
 
       while (nBytesRead != -1 && reading.get()) {
         nBytesRead = inputStream.read(abData, 0, abData.length);
-        logger.info(nBytesRead);
+        // logger.info(nBytesRead);
         if (nBytesRead >= 0 && !streams.isEmpty()) {
           abData = VolumeUtils.adjustVolume(abData, volume);
           var mp3 = mp3Encoder.encodePcmToMp3(abData);
@@ -145,7 +158,11 @@ public enum AudioLineReader {
     streams.remove(stream);
   }
 
-  public synchronized void stop() {
+  public void stop() {
+    stop(true);
+  }
+
+  public synchronized void stop(boolean shutdownStreams) {
 
 
     logger.info("Stopping reading audio line.");
@@ -163,7 +180,10 @@ public enum AudioLineReader {
         logger.error("Cannot close audio line input stream", e);
       }
     }
-    streams.clear();
+    if (shutdownStreams) {
+      streams.clear();
+    }
+
 
     currentRecordingDevice = null;
 
@@ -241,9 +261,9 @@ public enum AudioLineReader {
 
   }
 
-  public List<String> getCompatibleCaptureMixer() {
+  private void initCompatibleDeviceList() {
 
-    List<String> mixerList = new ArrayList<>();
+    recordingDeviceList = new ArrayList<>();
 
     for (Mixer.Info mi : AudioSystem.getMixerInfo()) {
 
@@ -252,13 +272,16 @@ public enum AudioLineReader {
         // Check if it supports the desired format
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, compressionFormat);
         if (targetMixer.isLineSupported(info)) {
-          mixerList.add(mi.getName());
+          recordingDeviceList.add(mi.getName());
         }
       } catch (LineUnavailableException e) {
         // Noting to do, that is unfortunate
       }
     }
-    return mixerList;
+  }
+
+  public List<String> getRecordingDeviceList() {
+    return recordingDeviceList;
   }
 
   public boolean isReading() {

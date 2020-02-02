@@ -1,7 +1,5 @@
 package fr.kbu.stronos.web;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -34,8 +32,6 @@ import fr.kbu.stronos.utils.StartupMp3Stream;
 public class StreamingService implements IStream, WebMvcConfigurer {
 
   private static final Logger logger = LogManager.getLogger(StreamingService.class);
-
-  private static final NumberFormat decimalFormat = new DecimalFormat("#0.00");
 
   @Override
   public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
@@ -96,7 +92,7 @@ public class StreamingService implements IStream, WebMvcConfigurer {
 
   @Override
   public List<CapturePeripheral> getAvailableCaptureDevices() {
-    List<String> allDevices = AudioLineReader.get().getCompatibleCaptureMixer();
+    List<String> allDevices = AudioLineReader.get().getRecordingDeviceList();
     String selectedOne = AudioLineReader.get().getCurrentRecordingDevice();
     List<CapturePeripheral> result = new ArrayList<>();
     for (String d : allDevices) {
@@ -111,9 +107,9 @@ public class StreamingService implements IStream, WebMvcConfigurer {
     ConfigurationManager.get().saveRecordingDevice(name);
 
     if (!AudioLineReader.get().getCurrentRecordingDevice().equals(name)
-        && AudioLineReader.get().getCompatibleCaptureMixer().contains(name)) {
+        && AudioLineReader.get().getRecordingDeviceList().contains(name)) {
 
-      AudioLineReader.get().stop();
+      AudioLineReader.get().stop(false);
       try {
         AudioLineReader.get().openAudioLine(name);
         StronosApplication.getThreadPool().submit(() -> AudioLineReader.get().read());

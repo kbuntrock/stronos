@@ -6,20 +6,14 @@ import de.sciss.jump3r.lowlevel.LameEncoder;
 
 public class Mp3Encoder {
 
-  // private final AudioFormat audioFormat;
-
   private final LameEncoder encoder;
 
   public Mp3Encoder(AudioFormat audioFormat) {
-    // this.audioFormat = audioFormat;
     encoder = new LameEncoder(audioFormat);
 
   }
 
   public byte[] encodePcmToMp3(byte[] pcm) {
-
-    // LameEncoder encoder = new LameEncoder(audioFormat, 256, LameEncoder.CHANNEL_MODE_STEREO,
-    // LameEncoder.QUALITY_HIGHEST, false);
 
     ByteArrayOutputStream mp3 = new ByteArrayOutputStream();
     byte[] buffer = new byte[encoder.getPCMBufferSize()];

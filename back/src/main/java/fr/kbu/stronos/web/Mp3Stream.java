@@ -53,9 +53,9 @@ public class Mp3Stream implements StreamingResponseBody {
   @Override
   public void writeTo(OutputStream out) throws IOException {
 
-    // When the stream is starting up, we write 0.5 seconds of empty sound to quickly fill
+    // When the stream is starting up, we write 2 seconds of empty sound to quickly fill
     // the Sonos buffer and prevent an early disconnection.
-    out.write(blankBuffer, 0, blankBuffer.length / 4);
+    out.write(blankBuffer, 0, blankBuffer.length);
     out.flush();
 
     try {

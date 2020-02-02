@@ -29,6 +29,7 @@
           <mat-select
             [(ngModel)]="selectedPeripheral"
             (selectionChange)="selectCapturePeripheral()"
+            placeholder="{{ currentCapturePeripheral }}"
           >
             <mat-option
               class="peripheral-option"

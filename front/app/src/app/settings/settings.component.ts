@@ -14,6 +14,7 @@ export class SettingsComponent implements OnInit {
 
   peripherals: Array<CapturePeripheral>;
   selectedPeripheral: string;
+  currentCapturePeripheral: string;
 
   volume = 1;
 
@@ -28,6 +29,9 @@ export class SettingsComponent implements OnInit {
       .getAvailableCaptureDevicesUsingGET()
       .subscribe(peripherals => {
         this.peripherals = peripherals;
+        this.currentCapturePeripheral = this.getCurrentCapturePeripheral(
+          peripherals
+        );
         this.updateLoadedState();
       });
   }
@@ -37,6 +41,17 @@ export class SettingsComponent implements OnInit {
     if (this.requests >= 2) {
       this.loaded = true;
     }
+  }
+
+  private getCurrentCapturePeripheral(
+    peripherals: Array<CapturePeripheral>
+  ): string {
+    for (const p of peripherals) {
+      if (p.active) {
+        return p.name;
+      }
+    }
+    return 'undefined';
   }
 
   updateVolume() {
@@ -54,6 +69,9 @@ export class SettingsComponent implements OnInit {
           .getAvailableCaptureDevicesUsingGET()
           .subscribe(peripherals => {
             this.peripherals = peripherals;
+            this.currentCapturePeripheral = this.getCurrentCapturePeripheral(
+              peripherals
+            );
           });
       });
   }
