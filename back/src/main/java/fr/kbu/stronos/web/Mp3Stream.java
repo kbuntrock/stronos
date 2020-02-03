@@ -11,7 +11,8 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 import fr.kbu.stronos.audio.AudioLineReader;
 
 /**
- *
+ * A client mp3 stream (one per client)
+ * 
  * @author Kevin Buntrock
  *
  */
@@ -19,6 +20,8 @@ public class Mp3Stream implements StreamingResponseBody {
 
   private static final Logger logger = LogManager.getLogger(Mp3Stream.class);
 
+  // A buffer of "blank" sound, used to fill initially fill the client buffer when connecting.
+  // In order to prevent early disconnection from clients which expect
   private static byte[] blankBuffer;
 
   static {
@@ -89,6 +92,11 @@ public class Mp3Stream implements StreamingResponseBody {
     shouldRun = false;
   }
 
+  /**
+   * Return the number of seconds of audio sample read by this client
+   * 
+   * @return number of seconds
+   */
   public double streamSince() {
     return totalBytes / (AudioLineReader.SAMPLE_SIZE_IN_BITS / 8 * AudioLineReader.NB_CHANNELS)
         / AudioLineReader.SAMPLE_RATE;

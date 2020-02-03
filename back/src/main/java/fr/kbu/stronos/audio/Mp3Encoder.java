@@ -4,10 +4,21 @@ import java.io.ByteArrayOutputStream;
 import javax.sound.sampled.AudioFormat;
 import de.sciss.jump3r.lowlevel.LameEncoder;
 
+/**
+ * Mp3 encoder
+ * 
+ * @author Kevin Buntrock
+ *
+ */
 public class Mp3Encoder {
 
   private final LameEncoder encoder;
 
+  /**
+   * Constructor
+   * 
+   * @param audioFormat
+   */
   public Mp3Encoder(AudioFormat audioFormat) {
     encoder = new LameEncoder(audioFormat);
 
@@ -29,7 +40,6 @@ public class Mp3Encoder {
       mp3.write(buffer, 0, bytesWritten);
     }
 
-    // encoder.close();
     return mp3.toByteArray();
   }
 
