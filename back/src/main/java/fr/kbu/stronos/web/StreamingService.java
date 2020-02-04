@@ -35,7 +35,7 @@ public class StreamingService implements IStream, WebMvcConfigurer {
 
   @Override
   public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
-    configurer.setDefaultTimeout(1000 * 60 * 60 * 48); // (48 hours)
+    configurer.setDefaultTimeout((long) 1000 * 60 * 60 * 48); // (48 hours)
   }
 
   @ExceptionHandler(ClientAbortException.class)
@@ -80,7 +80,7 @@ public class StreamingService implements IStream, WebMvcConfigurer {
   @Override
   public float setVolume(float volume) {
     logger.info("setVolume {}", volume);
-    volume = AudioLineReader.get().adjusVolume(volume);
+    volume = AudioLineReader.get().adjustVolume(volume);
     ConfigurationManager.get().saveVolume(volume);
     return volume;
   }

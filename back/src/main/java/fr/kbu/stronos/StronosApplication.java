@@ -71,7 +71,7 @@ public class StronosApplication {
   @PostConstruct
   private void launchApp() {
     logger.info("Stronos App startup");
-    AudioLineReader.get().adjusVolume(ConfigurationManager.get().getVolume());
+    AudioLineReader.get().adjustVolume(ConfigurationManager.get().getVolume());
 
     try {
       AudioLineReader.get().openAudioLine(ConfigurationManager.get().getRecordingDevice());

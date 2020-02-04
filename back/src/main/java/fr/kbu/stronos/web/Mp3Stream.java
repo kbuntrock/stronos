@@ -37,7 +37,7 @@ public class Mp3Stream implements StreamingResponseBody {
 
   protected boolean shouldRun = true;
 
-  public BlockingQueue<byte[]> queue = new LinkedBlockingQueue<>();
+  protected BlockingQueue<byte[]> queue = new LinkedBlockingQueue<>();
 
   protected long totalBytes = 0;
 
@@ -77,13 +77,15 @@ public class Mp3Stream implements StreamingResponseBody {
 
       }
 
-    } catch (IOException | InterruptedException e) {
-      if (e instanceof ClientAbortException) {
-        logger.error("Client aborted");
-      } else {
-        logger.error("Error while writing stream", e);
-      }
-
+    } catch (ClientAbortException e) {
+      logger.error("Client aborted");
+    } catch (IOException e) {
+      logger.error("Error while writing stream", e);
+    } catch (InterruptedException e) {
+      logger.error("Write in response interrupted", e);
+      AudioLineReader.get().removeStream(this);
+      // Restore interrupted state...
+      Thread.currentThread().interrupt();
     }
     AudioLineReader.get().removeStream(this);
   }
@@ -98,7 +100,8 @@ public class Mp3Stream implements StreamingResponseBody {
    * @return number of seconds
    */
   public double streamSince() {
-    return totalBytes / (AudioLineReader.SAMPLE_SIZE_IN_BITS / 8 * AudioLineReader.NB_CHANNELS)
+    return totalBytes
+        / (AudioLineReader.SAMPLE_SIZE_IN_BITS / (double) 8 * AudioLineReader.NB_CHANNELS)
         / AudioLineReader.SAMPLE_RATE;
   }
 

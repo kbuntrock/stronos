@@ -65,18 +65,8 @@ public enum ConfigurationManager {
       File file = new File(CONFIG_FILE_PATH);
       if (!file.exists()) {
         file.getParentFile().mkdirs();
-        file.createNewFile();
-      }
-      if (file.exists()) {
-        FileWriter fileWriter;
-        try {
-
-          fileWriter = new FileWriter(file);
-          PrintWriter printWriter = new PrintWriter(fileWriter);
-          printWriter.print(configString);
-          printWriter.close();
-        } catch (IOException e) {
-          logger.error("Cannot write to configuration file", e);
+        if (file.createNewFile()) {
+          writeConfigToFile(file, configString);
         }
       }
     } catch (JsonProcessingException e1) {
@@ -85,6 +75,15 @@ public enum ConfigurationManager {
       logger.error("Connot create or write to configuration file", e);
     }
 
+  }
+
+  private void writeConfigToFile(final File file, final String configString) {
+    try (FileWriter fileWriter = new FileWriter(file);) {
+      PrintWriter printWriter = new PrintWriter(fileWriter);
+      printWriter.print(configString);
+    } catch (IOException e) {
+      logger.error("Cannot write to configuration file", e);
+    }
   }
 
   private Configuration getConfiguration() {

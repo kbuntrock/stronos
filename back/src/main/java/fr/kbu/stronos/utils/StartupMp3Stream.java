@@ -44,8 +44,9 @@ public class StartupMp3Stream extends Mp3Stream {
         }
 
       }
-    } catch (InterruptedException e) {
-      logger.error("Error while writing stream", e);
+    } catch (@SuppressWarnings("squid:S2142") InterruptedException e) {
+      // This is unfortunate, but there is no explicit need to re-throw the exception
+      logger.error("Error while writing stream for warmup", e);
     }
 
     AudioLineReader.get().removeStream(this);

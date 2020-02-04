@@ -8,4 +8,9 @@ package fr.kbu.stronos.audio;
  */
 public class NoCaptureDeviceAvailable extends Exception {
 
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 801354490965294953L;
+
 }

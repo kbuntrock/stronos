@@ -47,7 +47,7 @@ public enum AudioLineReader {
       new AudioFormat(SAMPLE_RATE, SAMPLE_SIZE_IN_BITS, NB_CHANNELS, true, false);
 
   // Reading buffer size, dependant of the audio line buffer
-  public static int bufferSize = 1024 * 16;
+  private int bufferSize = 1024 * 16;
 
   private static final Logger logger = LogManager.getLogger(AudioLineReader.class);
 
@@ -73,7 +73,7 @@ public enum AudioLineReader {
   private List<String> recordingDeviceList;
 
   /**
-   * Private constuctor
+   * Private constructor
    */
   private AudioLineReader() {
     initCompatibleDeviceList();
@@ -101,7 +101,6 @@ public enum AudioLineReader {
     if (DEFAULT_MIXER_NAME.equals(info.getDeviceName())) {
       // Find the default System mixer corresponding to the dataline info
       inputLine = AudioSystem.getTargetDataLine(compressionFormat);
-      // inputLine = (TargetDataLine) AudioSystem.getLine(info.getDataLineInfo());
     } else {
       inputLine = AudioSystem.getTargetDataLine(compressionFormat, info.getMixerInfo());
     }
@@ -121,9 +120,8 @@ public enum AudioLineReader {
     logger.info("Target data line buffer size : {}", inputLine.getBufferSize());
     logger.info("App buffer size : {}", bufferSize);
 
-    inputLine.addLineListener(event -> {
-      logger.warn("Audio line event received : " + event.getType() + " - " + event.getSource());
-    });
+    inputLine
+        .addLineListener(event -> logger.warn("Audio line event received : {}", event.getType()));
 
     inputLine.open(compressionFormat);
     inputLine.start();
@@ -172,7 +170,6 @@ public enum AudioLineReader {
     } catch (IOException e) {
       logger.error("Error while reading audio line data", e);
     }
-    return;
   }
 
   /**
@@ -198,7 +195,7 @@ public enum AudioLineReader {
   }
 
   public void closeStreams() {
-    streams.forEach(s -> s.close());
+    streams.forEach(Mp3Stream::close);
   }
 
   public void removeStream(Object stream) {
@@ -286,6 +283,12 @@ public enum AudioLineReader {
 
     logger.warn("Fallback, we select the first available device");
 
+    return findDedaultAudioLine();
+
+  }
+
+  private AudioLineInfo findDedaultAudioLine() throws NoCaptureDeviceAvailable {
+
     for (Mixer.Info mi : AudioSystem.getMixerInfo()) {
       logger.info("Available mixer : {}", mi.getName());
 
@@ -337,11 +340,21 @@ public enum AudioLineReader {
     return streams;
   }
 
-  public float adjusVolume(float v) {
+  /**
+   * Set the volume
+   * 
+   * @param v
+   * @return
+   */
+  public float adjustVolume(float v) {
     volume = v;
     return volume;
   }
 
+  /**
+   * 
+   * @return the volume
+   */
   public float getVolume() {
     return volume;
   }

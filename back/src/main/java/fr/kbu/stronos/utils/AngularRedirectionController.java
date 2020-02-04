@@ -1,11 +1,10 @@
 package fr.kbu.stronos.utils;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 /**
- * Tous les appels qui ne sont pas sur mappés redirigent vers l'application angular (mise à part
- * ceux allant sur "assets")
+ * All GET calls not mapped are redirected to the angular app (except thoses going to "assets")
  * https://blog.impulsebyingeniance.io/spring-boot-angular-gerer-url-html-5/
  * 
  * @author Kevin Buntrock
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class AngularRedirectionController {
 
-  @RequestMapping(value = {"{path:(?:(?!assets|\\.).)*}/**"})
+  @GetMapping(value = {"{path:(?:(?!assets|\\.).)*}/**"})
   public String redirect() {
     return "forward:/";
   }
