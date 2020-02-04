@@ -22,6 +22,11 @@ public class ServerInfoDto {
   private long awakeSince;
 
   /**
+   * True if there is at least one audio entry peripheral
+   */
+  private boolean recordingSupported;
+
+  /**
    * List of streams
    */
   private List<StreamDto> streamList = new ArrayList<>();
@@ -68,6 +73,18 @@ public class ServerInfoDto {
     this.warmupComplete = warmupComplete;
   }
 
+  /**
+   * @return the recordingSupported
+   */
+  public boolean isRecordingSupported() {
+    return recordingSupported;
+  }
 
+  /**
+   * @param recordingSupported the recordingSupported to set
+   */
+  public void setRecordingSupported(boolean recordingSupported) {
+    this.recordingSupported = recordingSupported;
+  }
 
 }

@@ -74,6 +74,7 @@ public class StreamingService implements IStream, WebMvcConfigurer {
     });
     response.setAwakeSince((System.currentTimeMillis() - StronosApplication.AWAKE_SINCE) / 1000);
     response.setWarmupComplete(StronosApplication.isWarmupComplete());
+    response.setRecordingSupported(!AudioLineReader.get().getRecordingDeviceList().isEmpty());
     return response;
   }
 
